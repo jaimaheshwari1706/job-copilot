@@ -1,0 +1,28 @@
+{
+  "name": "job-copilot",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w @job-copilot/web",
+    "dev:api": "npm run dev -w @job-copilot/api",
+    "dev:worker": "npm run dev -w @job-copilot/worker",
+    "build:packages": "npm run build -w @job-copilot/shared -w @job-copilot/domain -w @job-copilot/ai -w @job-copilot/jobs -w @job-copilot/storage -w @job-copilot/db -w @job-copilot/queue",
+    "build:apps": "npm run build -w @job-copilot/api -w @job-copilot/worker -w @job-copilot/web",
+    "build": "npm run build:packages && npm run build:apps",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

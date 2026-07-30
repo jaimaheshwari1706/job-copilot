@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-surface: 255 255 255;
+  --color-surface-muted: 245 246 248;
+  --color-border: 226 229 233;
+  --color-primary: 79 70 229;
+}
+
+.dark {
+  --color-surface: 17 19 23;
+  --color-surface-muted: 26 29 35;
+  --color-border: 42 46 54;
+  --color-primary: 129 140 248;
+}
+
+body {
+  @apply bg-surface text-slate-900 dark:text-slate-100 transition-colors;
+}
