@@ -41,6 +41,11 @@ services:
       REDIS_URL: redis://redis:6379
       CORS_ORIGIN: http://localhost:5173
       LOG_LEVEL: info
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Set JWT_ACCESS_SECRET in your shell or a .env file next to docker-compose.yml}
+      SIGNED_URL_SECRET: ${SIGNED_URL_SECRET:?Set SIGNED_URL_SECRET in your shell or a .env file next to docker-compose.yml}
+      STORAGE_DIR: /repo/data/uploads
+    volumes:
+      - resume_uploads:/repo/data/uploads
     depends_on:
       mongo:
         condition: service_healthy
@@ -57,6 +62,9 @@ services:
       MONGO_URI: mongodb://mongo:27017/job-copilot
       REDIS_URL: redis://redis:6379
       LOG_LEVEL: info
+      STORAGE_DIR: /repo/data/uploads
+    volumes:
+      - resume_uploads:/repo/data/uploads
     depends_on:
       mongo:
         condition: service_healthy
@@ -76,3 +84,4 @@ services:
 volumes:
   mongo_data:
   redis_data:
+  resume_uploads:

@@ -50,10 +50,12 @@ async function attemptRefresh(): Promise<boolean> {
 }
 
 async function request<T>(path: string, init?: RequestInit, isRetry = false): Promise<T> {
+  const isFormData = init?.body instanceof FormData;
+
   const res = await fetch(`${API_BASE_URL}${path}`, {
     credentials: "include", // sends the HttpOnly refresh cookie
     headers: {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...init?.headers,
     },
@@ -84,4 +86,6 @@ export const apiClient = {
   patch: <T>(path: string, data?: unknown) =>
     request<T>(path, { method: "PATCH", body: data ? JSON.stringify(data) : undefined }),
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
+  /** For multipart/form-data uploads — do not set Content-Type manually, the browser adds the boundary. */
+  upload: <T>(path: string, formData: FormData) => request<T>(path, { method: "POST", body: formData }),
 };

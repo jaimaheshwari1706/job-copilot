@@ -1,4 +1,5 @@
 import "dotenv/config";
+import path from "node:path";
 import { z } from "zod";
 
 const envSchema = z.object({
@@ -25,6 +26,17 @@ const envSchema = z.object({
     .string()
     .transform((v) => v === "true")
     .default("false"),
+
+  // Storage (local-disk provider for now; swappable for S3 later behind the same interface)
+  // Default resolves to <repo-root>/data/uploads (two levels up from apps/api's
+  // cwd) so api and worker share the same path in local dev without Docker.
+  // In Docker, both containers run from /repo/apps/<name>, so this resolves
+  // to the same /repo/data/uploads in both — mount a shared volume there.
+  STORAGE_DIR: z
+    .string()
+    .default(() => path.resolve(process.cwd(), "..", "..", "data", "uploads")),
+  SIGNED_URL_SECRET: z.string().min(32, "SIGNED_URL_SECRET must be at least 32 characters"),
+  SIGNED_URL_TTL_SECONDS: z.coerce.number().int().positive().default(300),
 });
 
 /**

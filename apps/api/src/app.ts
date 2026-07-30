@@ -9,6 +9,9 @@ import { errorHandler, notFoundHandler } from "./lib/errors.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { profileRouter } from "./modules/profile/profile.routes.js";
+import { resumeRouter } from "./modules/resume/resume.routes.js";
+import { jobsRouter } from "./modules/jobs/jobs.routes.js";
+import { matchesRouter } from "./modules/matches/matches.routes.js";
 
 export function createApp() {
   const app = express();
@@ -30,6 +33,9 @@ export function createApp() {
   app.use("/health", healthRouter);
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
+  app.use("/resumes", resumeRouter);
+  app.use("/jobs", jobsRouter);
+  app.use("/matches", matchesRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

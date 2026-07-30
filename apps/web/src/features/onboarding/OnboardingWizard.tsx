@@ -90,7 +90,7 @@ export function OnboardingWizard() {
         <button
           type="button"
           disabled
-          title="Available once resume upload ships (Phase 4)"
+          title="Resume upload is available on the Resume page — auto-filling this form from it ships with AI extraction (Phase 8)"
           className="w-full mb-6 flex items-center justify-center gap-2 rounded-lg border border-dashed border-border py-2.5 text-sm text-slate-400 cursor-not-allowed"
         >
           <UploadCloud size={16} />

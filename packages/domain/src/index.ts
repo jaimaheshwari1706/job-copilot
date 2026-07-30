@@ -1,11 +1,15 @@
 /**
  * @job-copilot/domain
  *
- * Owns pure business logic shared by apps/api and apps/worker — most
- * importantly the matching engine's constraint checks, scorers, and
- * penalty rules (Phase 6+). Deliberately empty in Phase 1: this file
- * exists to reserve the package boundary and its dependency direction
- * (api -> domain, worker -> domain, never the reverse) so later phases
- * don't need to restructure imports.
+ * Business logic shared by apps/api and apps/worker: skill normalization
+ * (Phase 5.5) and the matching engine (Phase 6). AI-powered features
+ * (Phase 8+) explain match results — they never determine the score.
  */
-export {};
+export * from "./skills/canonical-skills.data.js";
+export * from "./skills/skill-normalizer.js";
+export * from "./skills/seed-skills.js";
+export * from "./skills/load-skill-normalizer.js";
+export * from "./matching/types.js";
+export * from "./matching/weights.config.js";
+export * from "./matching/match.pipeline.js";
+export * from "./ingestion/ingest-jobs.js";

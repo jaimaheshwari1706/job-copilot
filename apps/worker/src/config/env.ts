@@ -1,4 +1,5 @@
 import "dotenv/config";
+import path from "node:path";
 import { z } from "zod";
 
 const envSchema = z.object({
@@ -6,6 +7,9 @@ const envSchema = z.object({
   MONGO_URI: z.string().min(1, "MONGO_URI is required"),
   REDIS_URL: z.string().min(1, "REDIS_URL is required"),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
+  STORAGE_DIR: z
+    .string()
+    .default(() => path.resolve(process.cwd(), "..", "..", "data", "uploads")),
 });
 
 function loadEnv() {

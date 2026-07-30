@@ -1,5 +1,6 @@
 import type { HydratedDocument } from "mongoose";
 import { Profile, User, type ProfileDoc } from "@job-copilot/db";
+import { loadSkillNormalizer } from "@job-copilot/domain";
 import type { OnboardingInput, ProfileUpdateInput, Profile as ProfileDto } from "@job-copilot/shared";
 import { ApiError } from "../../lib/errors.js";
 
@@ -82,7 +83,13 @@ export async function updateProfile(
   // .set() is used here (rather than direct assignment) because Mongoose's
   // DocumentArray type is stricter than a plain array at the type level,
   // even though both are accepted identically at runtime.
-  if (input.skills !== undefined) profile.set("skills", input.skills);
+  if (input.skills !== undefined) {
+    const skillNormalizer = await loadSkillNormalizer();
+    profile.set(
+      "skills",
+      input.skills.map((s) => ({ ...s, name: skillNormalizer.normalize(s.name) })),
+    );
+  }
   if (input.employmentHistory !== undefined) profile.set("employmentHistory", input.employmentHistory);
   if (input.education !== undefined) profile.set("education", input.education);
   if (input.projects !== undefined) profile.set("projects", input.projects);
@@ -102,7 +109,7 @@ export async function saveOnboardingProgress(
   input: Partial<OnboardingInput>,
 ): Promise<ProfileDto> {
   const profile = await getOrCreateProfile(userId);
-  applyOnboardingFields(profile, input);
+  await applyOnboardingFields(profile, input);
   await profile.save();
   return toProfileDto(profile);
 }
@@ -112,7 +119,7 @@ export async function completeOnboarding(
   input: OnboardingInput,
 ): Promise<ProfileDto> {
   const profile = await getOrCreateProfile(userId);
-  applyOnboardingFields(profile, input);
+  await applyOnboardingFields(profile, input);
   profile.onboardingCompletedAt = new Date();
   await profile.save();
 
@@ -125,7 +132,10 @@ export async function completeOnboarding(
   return toProfileDto(profile);
 }
 
-function applyOnboardingFields(profile: HydratedDocument<ProfileDoc>, input: Partial<OnboardingInput>) {
+async function applyOnboardingFields(
+  profile: HydratedDocument<ProfileDoc>,
+  input: Partial<OnboardingInput>,
+) {
   if (input.name !== undefined) profile.name = input.name;
   if (input.currentRole !== undefined) profile.currentRole = input.currentRole;
   if (input.experienceYears !== undefined) profile.experienceYears = input.experienceYears;
@@ -138,11 +148,16 @@ function applyOnboardingFields(profile: HydratedDocument<ProfileDoc>, input: Par
     // Merge by name rather than replace — onboarding-entered skills are
     // user-sourced and confirmed by definition (per Phase 0: AI-extracted
     // data must never silently overwrite user-confirmed data; the reverse
-    // is safe, so a plain merge here is fine).
+    // is safe, so a plain merge here is fine). Normalized BEFORE the merge
+    // so "React.js" typed during onboarding and a pre-existing "React"
+    // entry correctly collapse into one, per amendment #6.
+    const skillNormalizer = await loadSkillNormalizer();
+    const normalizedInput = skillNormalizer.normalizeAll(input.skills);
+
     const existingNames = new Set((profile.skills ?? []).map((s) => s.name.toLowerCase()));
     const merged: Array<{ name: string; source: "user" | "ai_extracted" | "ai_confirmed"; confirmed: boolean }> =
       (profile.skills ?? []).map((s) => ({ name: s.name, source: s.source, confirmed: s.confirmed }));
-    for (const name of input.skills) {
+    for (const name of normalizedInput) {
       if (!existingNames.has(name.toLowerCase())) {
         merged.push({ name, source: "user", confirmed: true });
         existingNames.add(name.toLowerCase());
@@ -174,7 +189,8 @@ function applyOnboardingFields(profile: HydratedDocument<ProfileDoc>, input: Par
 
 export async function confirmSkills(userId: string, skillNames: string[]): Promise<ProfileDto> {
   const profile = await getOrCreateProfile(userId);
-  const nameSet = new Set(skillNames.map((n) => n.toLowerCase()));
+  const skillNormalizer = await loadSkillNormalizer();
+  const nameSet = new Set(skillNames.map((n) => skillNormalizer.normalize(n).toLowerCase()));
 
   profile.set(
     "skills",

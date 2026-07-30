@@ -10,6 +10,11 @@ import { ResetPasswordPage } from "../features/auth/ResetPasswordPage";
 import { RequireAuth } from "../features/auth/RequireAuth";
 import { OnboardingWizard } from "../features/onboarding/OnboardingWizard";
 import { ProfilePage } from "../features/profile/ProfilePage";
+import { ResumePage } from "../features/resume/ResumePage";
+import { JobsPage } from "../features/jobs/JobsPage";
+import { JobDetailPage } from "../features/jobs/JobDetailPage";
+import { SavedJobsPage } from "../features/jobs/SavedJobsPage";
+import { RecommendedJobsPage } from "../features/jobs/RecommendedJobsPage";
 
 export const router = createBrowserRouter([
   {
@@ -32,16 +37,15 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="/dashboard" replace /> },
           { path: "/dashboard", element: <PlaceholderPage title="Dashboard" phase="Phase 13" /> },
-          { path: "/jobs", element: <PlaceholderPage title="Discover Jobs" phase="Phase 5" /> },
+          { path: "/jobs", element: <JobsPage /> },
           {
             path: "/jobs/recommended",
-            element: <PlaceholderPage title="Recommended Jobs" phase="Phase 7" />,
+            element: <RecommendedJobsPage />,
           },
-          { path: "/jobs/saved", element: <PlaceholderPage title="Saved Jobs" phase="Phase 5" /> },
-          { path: "/jobs/:id", element: <PlaceholderPage title="Job Details" phase="Phase 5" /> },
+          { path: "/jobs/saved", element: <SavedJobsPage /> },
+          { path: "/jobs/:id", element: <JobDetailPage /> },
           { path: "/jobs/compare", element: <PlaceholderPage title="Compare Jobs" phase="Phase 7" /> },
-          { path: "/resume", element: <PlaceholderPage title="Resume" phase="Phase 4" /> },
-          { path: "/resume/upload", element: <PlaceholderPage title="Upload Resume" phase="Phase 4" /> },
+          { path: "/resume", element: <ResumePage /> },
           { path: "/skills", element: <PlaceholderPage title="Skill Analysis" phase="Phase 10" /> },
           { path: "/interview", element: <PlaceholderPage title="Interview Prep" phase="Phase 11" /> },
           { path: "/applications", element: <PlaceholderPage title="Applications" phase="Phase 9" /> },
