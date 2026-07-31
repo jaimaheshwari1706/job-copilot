@@ -53,4 +53,32 @@ describe("SkillNormalizer", () => {
       expect(result).toEqual(["React", "Node.js"]);
     });
   });
+
+  describe("findMentionedSkills", () => {
+    it("finds known skills mentioned in free-flowing prose", () => {
+      const text = "We're looking for someone strong in React.js and Node.js with JS experience.";
+      const found = normalizer.findMentionedSkills(text);
+      expect(found).toContain("React");
+      expect(found).toContain("Node.js");
+      expect(found).toContain("JavaScript");
+    });
+
+    it("does not match a substring inside an unrelated word (word-boundary check)", () => {
+      // "js" as an alias for JavaScript should not match inside "objects"
+      const text = "We work with complex objects and business logic.";
+      const found = normalizer.findMentionedSkills(text);
+      expect(found).not.toContain("JavaScript");
+    });
+
+    it("returns an empty array when nothing in the dictionary is mentioned", () => {
+      const text = "We are looking for a passionate person with great communication skills.";
+      expect(normalizer.findMentionedSkills(text)).toEqual([]);
+    });
+
+    it("de-duplicates when a skill is mentioned via multiple aliases", () => {
+      const text = "Must know React, react.js, and ReactJS well.";
+      const found = normalizer.findMentionedSkills(text);
+      expect(found.filter((s) => s === "React")).toHaveLength(1);
+    });
+  });
 });

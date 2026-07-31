@@ -1,13 +1,17 @@
 import { connectMongo } from "@job-copilot/db";
-import { scheduleJobIngestion } from "@job-copilot/queue";
+import { scheduleJobIngestion, scheduleAlertsCheck, scheduleDailyBrief } from "@job-copilot/queue";
 import { seedCanonicalSkills } from "@job-copilot/domain";
 import { env } from "./config/env.js";
 import { logger } from "./lib/logger.js";
 import { createHealthPingWorker } from "./processors/health-ping.processor.js";
 import { createResumeParseWorker } from "./processors/resume-parse.processor.js";
 import { createJobIngestionWorker } from "./processors/job-ingestion.processor.js";
+import { createAlertsWorker } from "./processors/alerts.processor.js";
+import { createDailyBriefWorker } from "./processors/daily-brief.processor.js";
 
 const JOB_INGESTION_INTERVAL_MS = 60 * 60 * 1000; // hourly
+const ALERTS_CHECK_INTERVAL_MS = 60 * 60 * 1000; // hourly (individual alerts still respect their own daily/weekly frequency)
+const DAILY_BRIEF_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
 
 async function main() {
   await connectMongo({ uri: env.MONGO_URI, serviceName: "worker" });
@@ -39,8 +43,29 @@ async function main() {
     logger.error({ jobId: job?.id, err }, "job-ingestion job failed");
   });
 
+  const alertsWorker = createAlertsWorker();
+  alertsWorker.on("completed", (job) => {
+    logger.info({ jobId: job.id }, "alerts-check job completed");
+  });
+  alertsWorker.on("failed", (job, err) => {
+    logger.error({ jobId: job?.id, err }, "alerts-check job failed");
+  });
+
+  const dailyBriefWorker = createDailyBriefWorker();
+  dailyBriefWorker.on("completed", (job) => {
+    logger.info({ jobId: job.id }, "daily-brief job completed");
+  });
+  dailyBriefWorker.on("failed", (job, err) => {
+    logger.error({ jobId: job?.id, err }, "daily-brief job failed");
+  });
+
   await scheduleJobIngestion(env.REDIS_URL, JOB_INGESTION_INTERVAL_MS);
-  logger.info({ intervalMs: JOB_INGESTION_INTERVAL_MS }, "Scheduled recurring job ingestion");
+  await scheduleAlertsCheck(env.REDIS_URL, ALERTS_CHECK_INTERVAL_MS);
+  await scheduleDailyBrief(env.REDIS_URL, DAILY_BRIEF_INTERVAL_MS);
+  logger.info(
+    { jobIngestionMs: JOB_INGESTION_INTERVAL_MS, alertsCheckMs: ALERTS_CHECK_INTERVAL_MS, dailyBriefMs: DAILY_BRIEF_INTERVAL_MS },
+    "Scheduled recurring background jobs",
+  );
 
   logger.info("worker started, listening for queued jobs");
 
@@ -50,6 +75,8 @@ async function main() {
       healthPingWorker.close(),
       resumeParseWorker.close(),
       jobIngestionWorker.close(),
+      alertsWorker.close(),
+      dailyBriefWorker.close(),
     ]);
     process.exit(0);
   };

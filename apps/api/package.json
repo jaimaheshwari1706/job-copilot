@@ -13,6 +13,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@job-copilot/ai": "*",
     "@job-copilot/db": "*",
     "@job-copilot/domain": "*",
     "@job-copilot/jobs": "*",

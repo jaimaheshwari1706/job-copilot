@@ -2,6 +2,8 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Bookmark, BookmarkCheck, EyeOff, MapPin, Briefcase, Wallet } from "lucide-react";
 import { useJob, useSaveJob, useHideJob, useUnsaveJob } from "./jobs.api";
 import { MatchBreakdownCard } from "../matches/MatchBreakdownCard";
+import { CoverLetterSection } from "../ai/CoverLetterSection";
+import { useCreateApplication } from "../applications/applications.api";
 
 const WORK_MODE_LABEL: Record<string, string> = {
   remote: "Remote",
@@ -29,6 +31,7 @@ export function JobDetailPage() {
   const saveJob = useSaveJob();
   const hideJob = useHideJob();
   const unsaveJob = useUnsaveJob();
+  const createApplication = useCreateApplication();
 
   if (isLoading) return <p className="text-sm text-slate-500">Loading job...</p>;
   if (!job) return <p className="text-sm text-slate-500">Job not found.</p>;
@@ -97,17 +100,29 @@ export function JobDetailPage() {
           </div>
         )}
 
-        <a
-          href={job.applyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={() => {
+            createApplication.mutate({ jobId: job.id, status: "applied" });
+            window.open(job.applyUrl, "_blank", "noopener,noreferrer");
+          }}
           className="inline-block rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5"
         >
           Apply on company site →
-        </a>
+        </button>
+        {createApplication.isSuccess && (
+          <p className="text-xs text-slate-400 mt-2">
+            Added to your{" "}
+            <Link to="/applications" className="text-primary hover:underline">
+              applications tracker
+            </Link>
+            .
+          </p>
+        )}
       </div>
 
       <MatchBreakdownCard jobId={job.id} />
+      <CoverLetterSection jobId={job.id} />
 
       <div className="rounded-xl border border-border bg-surface p-6 space-y-5">
         <div>

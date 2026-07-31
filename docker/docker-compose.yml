@@ -43,6 +43,8 @@ services:
       LOG_LEVEL: info
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Set JWT_ACCESS_SECRET in your shell or a .env file next to docker-compose.yml}
       SIGNED_URL_SECRET: ${SIGNED_URL_SECRET:?Set SIGNED_URL_SECRET in your shell or a .env file next to docker-compose.yml}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-claude-sonnet-5}
       STORAGE_DIR: /repo/data/uploads
     volumes:
       - resume_uploads:/repo/data/uploads

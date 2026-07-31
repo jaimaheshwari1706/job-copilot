@@ -11,6 +11,7 @@ import {
   KanbanSquare,
   User,
   Settings,
+  ScanSearch,
   type LucideIcon,
 } from "lucide-react";
 
@@ -33,6 +34,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/jobs", label: "Discover Jobs", icon: Search },
       { to: "/jobs/recommended", label: "Recommended", icon: Sparkles },
       { to: "/jobs/saved", label: "Saved Jobs", icon: Bookmark },
+      { to: "/jobs/analyze", label: "Analyze a JD", icon: ScanSearch },
       { to: "/alerts", label: "Alerts", icon: Bell },
     ],
   },

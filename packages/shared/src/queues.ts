@@ -8,6 +8,8 @@ export const QUEUE_NAMES = {
   HEALTH_PING: "health-ping",
   RESUME_PARSE: "resume-parse",
   JOB_INGESTION: "job-ingestion",
+  ALERTS_CHECK: "alerts-check",
+  DAILY_BRIEF: "daily-brief",
 } as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES];

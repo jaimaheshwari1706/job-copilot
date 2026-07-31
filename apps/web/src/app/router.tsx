@@ -15,6 +15,15 @@ import { JobsPage } from "../features/jobs/JobsPage";
 import { JobDetailPage } from "../features/jobs/JobDetailPage";
 import { SavedJobsPage } from "../features/jobs/SavedJobsPage";
 import { RecommendedJobsPage } from "../features/jobs/RecommendedJobsPage";
+import { JdAnalyzerPage } from "../features/ai/JdAnalyzerPage";
+import { ApplicationsPage } from "../features/applications/ApplicationsPage";
+import { ApplicationDetailPage } from "../features/applications/ApplicationDetailPage";
+import { SkillsPage } from "../features/skills/SkillsPage";
+import { InterviewHomePage } from "../features/interview/InterviewHomePage";
+import { InterviewSessionPage } from "../features/interview/InterviewSessionPage";
+import { AlertsPage } from "../features/alerts/AlertsPage";
+import { NotificationsPage } from "../features/notifications/NotificationsPage";
+import { DashboardPage } from "../features/dashboard/DashboardPage";
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +45,7 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
           { index: true, element: <Navigate to="/dashboard" replace /> },
-          { path: "/dashboard", element: <PlaceholderPage title="Dashboard" phase="Phase 13" /> },
+          { path: "/dashboard", element: <DashboardPage /> },
           { path: "/jobs", element: <JobsPage /> },
           {
             path: "/jobs/recommended",
@@ -45,12 +54,15 @@ export const router = createBrowserRouter([
           { path: "/jobs/saved", element: <SavedJobsPage /> },
           { path: "/jobs/:id", element: <JobDetailPage /> },
           { path: "/jobs/compare", element: <PlaceholderPage title="Compare Jobs" phase="Phase 7" /> },
+          { path: "/jobs/analyze", element: <JdAnalyzerPage /> },
           { path: "/resume", element: <ResumePage /> },
-          { path: "/skills", element: <PlaceholderPage title="Skill Analysis" phase="Phase 10" /> },
-          { path: "/interview", element: <PlaceholderPage title="Interview Prep" phase="Phase 11" /> },
-          { path: "/applications", element: <PlaceholderPage title="Applications" phase="Phase 9" /> },
-          { path: "/alerts", element: <PlaceholderPage title="Alerts" phase="Phase 12" /> },
-          { path: "/notifications", element: <PlaceholderPage title="Notifications" phase="Phase 12" /> },
+          { path: "/skills", element: <SkillsPage /> },
+          { path: "/interview", element: <InterviewHomePage /> },
+          { path: "/interview/session/:id", element: <InterviewSessionPage /> },
+          { path: "/applications", element: <ApplicationsPage /> },
+          { path: "/applications/:id", element: <ApplicationDetailPage /> },
+          { path: "/alerts", element: <AlertsPage /> },
+          { path: "/notifications", element: <NotificationsPage /> },
           { path: "/profile", element: <ProfilePage /> },
           { path: "/settings", element: <PlaceholderPage title="Settings" phase="Phase 3" /> },
           { path: "/system-health", element: <SystemHealthPage /> },

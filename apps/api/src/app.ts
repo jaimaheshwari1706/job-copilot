@@ -12,6 +12,13 @@ import { profileRouter } from "./modules/profile/profile.routes.js";
 import { resumeRouter } from "./modules/resume/resume.routes.js";
 import { jobsRouter } from "./modules/jobs/jobs.routes.js";
 import { matchesRouter } from "./modules/matches/matches.routes.js";
+import { aiRouter } from "./modules/ai/ai.routes.js";
+import { applicationsRouter } from "./modules/applications/applications.routes.js";
+import { skillsRouter } from "./modules/skills/skills.routes.js";
+import { interviewRouter } from "./modules/interviews/interview.routes.js";
+import { alertsRouter } from "./modules/alerts/alerts.routes.js";
+import { notificationsRouter } from "./modules/notifications/notifications.routes.js";
+import { dashboardRouter } from "./modules/dashboard/dashboard.routes.js";
 
 export function createApp() {
   const app = express();
@@ -36,6 +43,13 @@ export function createApp() {
   app.use("/resumes", resumeRouter);
   app.use("/jobs", jobsRouter);
   app.use("/matches", matchesRouter);
+  app.use("/ai", aiRouter);
+  app.use("/applications", applicationsRouter);
+  app.use("/skills", skillsRouter);
+  app.use("/interview", interviewRouter);
+  app.use("/alerts", alertsRouter);
+  app.use("/notifications", notificationsRouter);
+  app.use("/dashboard", dashboardRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

@@ -37,6 +37,11 @@ const envSchema = z.object({
     .default(() => path.resolve(process.cwd(), "..", "..", "data", "uploads")),
   SIGNED_URL_SECRET: z.string().min(32, "SIGNED_URL_SECRET must be at least 32 characters"),
   SIGNED_URL_TTL_SECONDS: z.coerce.number().int().positive().default(300),
+
+  // AI (Phase 8). Optional by design — when unset, AI routes return a
+  // clear "not configured" response rather than crashing or faking output.
+  ANTHROPIC_API_KEY: z.string().optional(),
+  AI_MODEL: z.string().default("claude-sonnet-5"),
 });
 
 /**

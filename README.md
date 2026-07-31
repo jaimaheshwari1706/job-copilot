@@ -14,8 +14,13 @@ through **Phase 3 of 14**.
 | 5.5 | ✅ | Skill taxonomy + normalization |
 | 6 | ✅ | Matching engine |
 | 7 | ✅ | Job recommendations |
-| 8 | ⏳ next | AI application tools |
-| 9–14 | — | See Phase 0 roadmap |
+| 8 | ✅ | AI application tools (JD analyzer, cover letters) |
+| 9 | ✅ | Application tracker |
+| 10 | ✅ | Skill intelligence (gap analysis) |
+| 11 | ✅ | Interview preparation + AI mock interview |
+| 12 | ✅ | Alerts + daily AI job brief |
+| 13 | ✅ | Career dashboard |
+| 14 | ⏳ next | Production hardening (final phase) |
 
 ## Architecture
 
@@ -51,6 +56,12 @@ cp apps/web/.env.example apps/web/.env
 **Important:** replace `JWT_ACCESS_SECRET` in `apps/api/.env` with a real
 random 32+ character value before running anything beyond local dev —
 the `.env.example` value is a placeholder, not a secret.
+
+**AI features (optional):** set `ANTHROPIC_API_KEY` in `apps/api/.env` to
+enable the JD Analyzer's AI commentary and cover letter generation. Leave
+it unset to run without them — the app works fully otherwise, those two
+features just show a clear "not configured" state instead. For Docker
+Compose, export it in your shell first: `export ANTHROPIC_API_KEY=sk-...`.
 
 ### Option A — Docker Compose (recommended, gives you real Mongo/Redis)
 
@@ -319,14 +330,178 @@ warnings), build, and 96 passing tests. As in every prior phase, actually
 computing recommendations against live data is untested here — same
 network-allowlist constraint throughout this build.
 
-## What Phase 8 will implement
+## What Phase 8 implemented
 
-AI application tools — the first phase requiring a real AI provider. This
-is a bigger jump than prior phases: it needs API credentials, a
-provider abstraction (`LLMProvider`/`EmbeddingProvider` per amendment
-#16), structured-output validation, prompt-injection defenses treating
-resume/JD text as data never instructions, and `aiRuns` cost/usage
-tracking — all before the first feature (JD analysis, resume tailoring,
-cover letters) can honestly ship. I'll flag clearly if/when this phase
-needs something from you (an API key) that isn't available in this
-sandboxed build environment.
+The first phase needing a real external AI dependency. This sandbox has
+no `ANTHROPIC_API_KEY` (confirmed by checking) and I didn't fabricate or
+borrow one — so here's exactly what's real vs. what's honestly untested:
+
+**Real, production code:** `packages/ai`'s `LLMProvider` interface and a
+full `AnthropicProvider` implementation — structured output via forced
+tool-calling (converting Zod schemas to Anthropic's tool format), one
+repair-retry that feeds the actual validation errors back to the model,
+and a hard failure (never a fake/partial result) if the second attempt
+still doesn't validate. Two features built on it, both following
+"AI explains, never determines": the **JD Analyzer** (§15, deferred here
+from Phase 6) runs the real Phase 6 matching pipeline against pasted text
+first, with AI only adding prose commentary on top — and when AI isn't
+configured, it still returns the genuinely useful deterministic score
+rather than nothing; and the **Cover Letter Generator** (§17) uses strict
+anti-fabrication prompting and — a deliberate design decision — always
+creates a new document on regeneration rather than upserting, so a user's
+edits can never be silently overwritten (amendment #12).
+
+**Genuinely tested without a live key:** 14 tests for `AnthropicProvider`
+using an injected fake `fetch` — including one that verifies the
+repair-retry sends a real second HTTP request with the actual validation
+errors embedded, and one confirming it throws rather than ever returning
+invalid data. Route-level tests sign real JWTs to get past auth and hit
+the actual service logic, confirming the "AI not configured" path returns
+a clean 400 in this environment — not a mock, the real code path, since
+this sandbox genuinely has no key.
+
+**Honestly untested:** an actual live call to `api.anthropic.com` succeeding
+end-to-end. I cannot verify that without your key. Set `ANTHROPIC_API_KEY`
+in `apps/api/.env` (or pass it to `docker compose` — see below) to enable
+AI features; the app runs completely normally without it, just with AI-only
+features (JD commentary, cover letters) showing a clear "not configured"
+state instead of being fake or crashing.
+
+**Verified in this sandbox:** typecheck (11/11 workspaces — added
+`@job-copilot/ai`), lint (0 warnings), build, and 122 passing tests.
+
+## What Phase 9 implemented
+
+Application tracker: `applications`/`applicationEvents`/`applicationNotes`
+as separate collections (amendment #19 — no unbounded notes array), with
+`jobId` optional and a server-resolved `jobSnapshot` so application
+history survives the original job later changing or expiring (amendment
+#13). Status changes automatically log a timeline event; the create
+endpoint is idempotent per (user, job) so clicking "Apply" twice doesn't
+duplicate a row. Kanban board (native HTML5 drag-and-drop, no extra
+dependency) and table view, both persisting status changes to the
+backend — not local-only UI state. "Apply" on the job detail page now
+actually creates a tracked application before opening the external link,
+closing the loop between job discovery and tracking.
+
+**Verified in this sandbox:** typecheck (11/11 workspaces), lint (0
+warnings), build, and 134 passing tests — including schema tests for the
+jobId-or-jobSnapshot validation refinement and route-level auth-guard
+tests for every new endpoint. As throughout this build, actually creating
+an application against a live Mongo record (and watching the Kanban board
+update via drag-and-drop) is untested here for the same network-allowlist
+reason.
+
+## What Phase 10 implemented
+
+Skill intelligence: every demand percentage is counted directly from real
+`Job.requiredSkills`/`preferredSkills` data — never AI-estimated, per
+Phase 0 §21's explicit requirement. "Relevant jobs" reuses Phase 6/7's
+match computation (score ≥ 30) rather than a second relevance definition,
+so a candidate's skill gaps are calculated against jobs they're actually
+plausible fits for, not the entire job pool indiscriminately. The
+headline feature — "best skills to learn next" — counts `jobsUnlocked`
+per missing skill: jobs where that skill is the *only* required skill
+still missing, so learning it alone would make the candidate fully
+qualified on required skills for those specific roles. This is a genuinely
+non-trivial calculation (distinct from simple demand-percentage ranking)
+and is the most thoroughly tested logic in the project relative to its
+size.
+
+**Verified in this sandbox:** typecheck (11/11 workspaces), lint (0
+warnings), build, and 147 passing tests — including 12 fixture-based tests
+for the gap-analysis algorithm covering exact percentage counts (not
+estimates), required-vs-preferred demand tracking, case-insensitive skill
+matching, and the jobsUnlocked sole-missing-skill logic specifically
+(verified it does NOT count a job as unlocked when multiple required
+skills are still missing). This phase has zero AI dependency, so unlike
+Phase 8, there's nothing here that's untestable in principle — only the
+usual live-Mongo-data caveat that applies throughout this build.
+
+## What Phase 11 implemented
+
+Interview preparation (batch question generation across categories) and
+an interactive AI mock interview — one question at a time, rubric-based
+evaluation (correctness, completeness, clarity, depth, relevance), capped
+at 5 rounds with auto-completion. This reused Phase 8's `LLMProvider`
+infrastructure for a second and third feature rather than building new AI
+plumbing — same structured-output validation, same honest "not configured"
+degrade (genuinely exercised in this sandbox, which has no API key).
+
+The requirement I paid closest attention to: §23 explicitly says never
+show fake precision on inherently subjective judgment. `confidence` is a
+**required** field on every evaluation (not optional, not defaulted to
+"high") — enforced at the schema level and verified with a dedicated test
+confirming an evaluation missing it is rejected outright, not silently
+accepted with an implied confident score. The UI surfaces this label
+prominently next to the score rather than burying it.
+
+**Verified in this sandbox:** typecheck (11/11 workspaces), lint (0
+warnings), build, and 162 passing tests — including schema tests for the
+required-confidence constraint and the generated-questions category/count
+bounds, plus route tests confirming both prep and mock session creation
+return a clean 400 (not fake questions) when AI isn't configured. Runtime
+boot confirmed for the api process with the full interview module wired
+in. As throughout this build, an actual live mock-interview conversation
+against a real Mongo record and a real AI call is untested here.
+
+## What Phase 12 implemented
+
+Alerts and the daily AI job brief — "AI" in the feature name per Phase 0's
+naming, but this phase has **zero LLM calls**: both counts and rankings
+come entirely from the deterministic matching pipeline (Phase 6) and real
+database queries, exactly per §26's requirement that every number be
+counted, never estimated. Alerts are processed by a genuine BullMQ
+repeatable job (hourly check, each alert respecting its own daily/weekly
+frequency) — not a frontend timer, and the check keeps running whether or
+not anyone has the app open.
+
+**A necessary refactor first:** extracted `toCandidateInput`/`toJobInput`/
+`computeOrCacheMatch` out of `apps/api` and into `packages/domain`, since
+the worker needed match-scoring for alert filtering and the daily brief
+but — per the Phase 0 dependency rule — can never import from `apps/api`.
+Verified this didn't regress anything (same 100 api+domain tests passed
+before and after).
+
+Both the alert-matching predicate and the daily-brief summary builder are
+pure functions, tested with 12 and 4 fixture tests respectively — genuinely
+testable without a database, unlike most of this backend. One test bug
+(a wrong assertion, not the code) was caught and fixed along the way.
+
+**Verified in this sandbox:** typecheck (11/11 workspaces), lint (0
+warnings), build, and 182 passing tests. Runtime boot confirmed for both
+`api` and `worker` with the alerts/daily-brief pipeline wired in. As
+throughout this build, actually running the scheduled jobs against live
+data and watching notifications appear is untested here — same
+network-allowlist constraint as every prior phase.
+
+## What Phase 13 implemented
+
+The career dashboard — deliberately almost no new business logic, since
+that was the point: aggregate what the previous 12 phases already
+compute. Job/match stats reuse the same scoring-loop pattern as
+recommendations (Phase 7); top recommended jobs and skill gaps delegate
+directly to `jobsService.getRecommendedJobs` and
+`skillsService.getSkillGapAnalysis` rather than re-deriving them;
+application funnel and recent activity aggregate straight from
+`Application`/`ApplicationEvent`. The one new piece — an optional AI
+insight paragraph — follows the same pattern as every AI feature in this
+build: real calculated numbers are handed to the model as data it must
+not contradict or supplement with invented figures, and it's `null`,
+never faked, when no key is configured.
+
+**Verified in this sandbox:** typecheck (11/11 workspaces), lint (0
+warnings), build, and 183 passing tests. Runtime boot confirmed for the
+api process with the dashboard module wired in. As throughout this
+build, seeing real aggregated numbers against live data is untested
+here — same network-allowlist constraint as every prior phase.
+
+## What Phase 14 will implement — the final phase
+
+Production hardening: a security review pass (the items in Phase 0 §43
+not already covered incidentally by earlier phases' design decisions),
+a performance pass, Docker/CI-readiness verification, accessibility and
+responsive-design review, dark-mode validation across every page built
+across these 13 phases, and closing documentation (`docs/architecture.md`,
+`docs/api.md`, `docs/ai-system.md`, `docs/matching-engine.md`) — no new
+features, just making everything built so far demonstrably solid.

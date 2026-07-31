@@ -60,4 +60,24 @@ export class SkillNormalizer {
   isKnown(raw: string): boolean {
     return this.aliasToCanonical.has(raw.trim().toLowerCase());
   }
+
+  /**
+   * Scans free text for any known skill alias as a whole-word match,
+   * returning the canonical names found. Used for pasted job descriptions,
+   * which (unlike ingested job listings) arrive as prose rather than a
+   * clean requirements array — a substring/word-boundary scan against the
+   * dictionary is the honest heuristic available without an NLP extractor.
+   */
+  findMentionedSkills(text: string): string[] {
+    const found = new Set<string>();
+    for (const [alias, canonical] of this.aliasToCanonical.entries()) {
+      const pattern = new RegExp(`(?<![a-z0-9])${escapeRegExp(alias)}(?![a-z0-9])`, "i");
+      if (pattern.test(text)) found.add(canonical);
+    }
+    return [...found];
+  }
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
