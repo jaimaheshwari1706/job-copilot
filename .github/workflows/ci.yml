@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_ENV: development
+  MONGO_URI: mongodb://127.0.0.1:27017/job-copilot
+  REDIS_URL: redis://127.0.0.1:6379
+  JWT_ACCESS_SECRET: ci-only-not-a-real-secret-32-plus-characters
+  SIGNED_URL_SECRET: ci-only-not-a-real-secret-32-plus-characters
+  CORS_ORIGIN: http://localhost:5173
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      mongo:
+        image: mongo:7
+        ports: ["27017:27017"]
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      - run: npm run test
+
+      - run: npm run build
