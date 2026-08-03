@@ -2,6 +2,7 @@
 
 An AI-assisted job search platform built around a deterministic, explainable matching engine — with an AI layer designed in, not bolted on.
 
+[![CI](https://github.com/jaimaheshwari1706/job-copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/jaimaheshwari1706/job-copilot/actions/workflows/ci.yml)
 ![License: Unlicensed](https://img.shields.io/badge/license-unlicensed-lightgrey)
 
 ## Overview
