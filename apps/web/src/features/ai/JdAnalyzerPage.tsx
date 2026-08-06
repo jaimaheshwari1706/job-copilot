@@ -61,7 +61,7 @@ export function JdAnalyzerPage() {
         <button
           type="submit"
           disabled={analyze.isPending || text.trim().length < 50}
-          className="rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
+          className="rounded-lg bg-primary-solid text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
         >
           {analyze.isPending ? "Analyzing..." : "Analyze"}
         </button>

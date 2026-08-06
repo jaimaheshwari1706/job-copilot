@@ -126,7 +126,7 @@ export function InterviewSessionPage() {
             type="button"
             onClick={() => id && draft.trim() && submitAnswer.mutate({ sessionId: id, answer: draft.trim() }, { onSuccess: () => setDraft("") })}
             disabled={!draft.trim() || submitAnswer.isPending}
-            className="rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
+            className="rounded-lg bg-primary-solid text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
           >
             {submitAnswer.isPending ? "Evaluating..." : "Submit answer"}
           </button>

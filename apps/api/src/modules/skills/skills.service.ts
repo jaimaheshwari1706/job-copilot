@@ -19,16 +19,20 @@ export async function getSkillGapAnalysis(userId: string): Promise<SkillGapAnaly
 
   const activeJobs = await Job.find({ status: "active" }).limit(MAX_CANDIDATE_JOBS);
 
-  const relevantJobs: JobSkillProfile[] = [];
-  for (const job of activeJobs) {
-    const match = await getOrComputeMatch(userId, String(job._id));
-    if (match.overallScore >= RELEVANCE_SCORE_THRESHOLD) {
-      relevantJobs.push({
-        requiredSkills: job.requiredSkills ?? [],
-        preferredSkills: job.preferredSkills ?? [],
-      });
-    }
-  }
+  // Parallelized rather than one-at-a-time — same fix and rationale as
+  // dashboard.service.ts's computeJobMatchStats (measured ~2.8x slower
+  // sequential on a cold cache even at demo scale). Pairs job+match
+  // together per-item (matching the pattern jobs.service.ts already uses
+  // for this same call) rather than a separate indexed lookup.
+  const scored = await Promise.all(
+    activeJobs.map(async (job) => ({ job, match: await getOrComputeMatch(userId, String(job._id)) })),
+  );
+  const relevantJobs: JobSkillProfile[] = scored
+    .filter(({ match }) => match.overallScore >= RELEVANCE_SCORE_THRESHOLD)
+    .map(({ job }) => ({
+      requiredSkills: job.requiredSkills ?? [],
+      preferredSkills: job.preferredSkills ?? [],
+    }));
 
   return computeSkillGapAnalysis(candidateInput.skills, relevantJobs);
 }

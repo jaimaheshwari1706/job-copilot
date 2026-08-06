@@ -10,7 +10,10 @@ export default {
           muted: "rgb(var(--color-surface-muted) / <alpha-value>)",
         },
         border: "rgb(var(--color-border) / <alpha-value>)",
-        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        primary: {
+          DEFAULT: "rgb(var(--color-primary) / <alpha-value>)",
+          solid: "rgb(var(--color-primary-solid) / <alpha-value>)",
+        },
       },
     },
   },

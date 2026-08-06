@@ -68,7 +68,7 @@ export function SystemHealthPage() {
           type="button"
           onClick={() => enqueuePing.mutate()}
           disabled={enqueuePing.isPending}
-          className="rounded-lg bg-primary text-white text-sm px-4 py-2 disabled:opacity-50"
+          className="rounded-lg bg-primary-solid text-white text-sm px-4 py-2 disabled:opacity-50"
         >
           {enqueuePing.isPending ? "Enqueuing..." : "Send health ping to worker"}
         </button>

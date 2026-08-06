@@ -106,7 +106,7 @@ export function JobDetailPage() {
             createApplication.mutate({ jobId: job.id, status: "applied" });
             window.open(job.applyUrl, "_blank", "noopener,noreferrer");
           }}
-          className="inline-block rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5"
+          className="inline-block rounded-lg bg-primary-solid text-white text-sm font-medium px-5 py-2.5"
         >
           Apply on company site →
         </button>

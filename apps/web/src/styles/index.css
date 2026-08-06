@@ -7,6 +7,15 @@
   --color-surface-muted: 245 246 248;
   --color-border: 226 229 233;
   --color-primary: 79 70 229;
+  /*
+   * Separate from --color-primary on purpose: --color-primary is lightened
+   * in dark mode so it reads well as *text/icon color* against the dark
+   * surface (6.23:1). That same lighter value used as a *solid button
+   * fill* with white text drops to 2.98:1, failing WCAG AA (4.5:1) --
+   * confirmed during the Phase 14 dark-mode audit. This token stays fixed
+   * across both themes so solid-fill buttons keep passing contrast.
+   */
+  --color-primary-solid: 79 70 229;
 }
 
 .dark {

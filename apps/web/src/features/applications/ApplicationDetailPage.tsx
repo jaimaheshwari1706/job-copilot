@@ -110,7 +110,7 @@ export function ApplicationDetailPage() {
           <button
             type="submit"
             disabled={!noteDraft.trim() || addNote.isPending}
-            className="rounded-lg bg-primary text-white text-sm px-4 py-2 disabled:opacity-50"
+            className="rounded-lg bg-primary-solid text-white text-sm px-4 py-2 disabled:opacity-50"
           >
             Add
           </button>

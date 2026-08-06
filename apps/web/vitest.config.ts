@@ -8,5 +8,9 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/test-setup.ts"],
+    // Playwright E2E specs (apps/web/e2e/*.spec.ts) use a different test
+    // API (@playwright/test) and must only run via `npx playwright test`,
+    // never picked up by Vitest's default *.spec.ts glob.
+    exclude: ["**/node_modules/**", "**/e2e/**"],
   },
 });

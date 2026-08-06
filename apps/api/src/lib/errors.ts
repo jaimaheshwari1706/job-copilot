@@ -38,11 +38,27 @@ export function notFoundHandler(req: Request, _res: Response, next: NextFunction
   next(ApiError.notFound(`Route not found: ${req.method} ${req.originalUrl}`));
 }
 
-export function errorHandler(err: unknown, req: Request, res: Response, _next: NextFunction) {
-  const apiError =
-    err instanceof ApiError ? err : ApiError.internal("Unexpected error", undefined);
+/**
+ * Multer throws its own error class (not an ApiError) when a file upload
+ * violates `limits` (size, unexpected field, etc.) or a `fileFilter`
+ * rejects it. Without this translation those errors fell through to a
+ * generic 500 instead of the 400 they actually are — confirmed live by
+ * uploading an 11MB file against the 10MB resume-upload limit.
+ */
+function multerErrorToApiError(err: unknown): ApiError | undefined {
+  if (!(err instanceof Error) || err.name !== "MulterError") return undefined;
+  const code = (err as Error & { code?: string }).code;
+  if (code === "LIMIT_FILE_SIZE") {
+    return ApiError.badRequest("File is too large.");
+  }
+  return ApiError.badRequest(err.message || "Invalid file upload.");
+}
 
-  if (!(err instanceof ApiError)) {
+export function errorHandler(err: unknown, req: Request, res: Response, _next: NextFunction) {
+  const translated = err instanceof ApiError ? err : multerErrorToApiError(err);
+  const apiError = translated ?? ApiError.internal("Unexpected error", undefined);
+
+  if (!translated) {
     logger.error({ err, path: req.path }, "Unhandled error");
   } else if (apiError.statusCode >= 500) {
     logger.error({ err: apiError, path: req.path }, "Server error");

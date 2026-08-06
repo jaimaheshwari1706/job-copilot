@@ -51,7 +51,7 @@ export function LoginPage() {
         <button
           type="submit"
           disabled={login.isPending}
-          className="w-full rounded-lg bg-primary text-white text-sm font-medium py-2.5 disabled:opacity-50"
+          className="w-full rounded-lg bg-primary-solid text-white text-sm font-medium py-2.5 disabled:opacity-50"
         >
           {login.isPending ? "Logging in..." : "Log in"}
         </button>

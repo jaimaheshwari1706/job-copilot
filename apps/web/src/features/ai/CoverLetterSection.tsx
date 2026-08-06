@@ -65,7 +65,7 @@ export function CoverLetterSection({ jobId }: { jobId: string }) {
             type="button"
             onClick={() => generate.mutate({ jobId, tone })}
             disabled={generate.isPending}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary text-white text-xs font-medium px-3 py-1.5 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary-solid text-white text-xs font-medium px-3 py-1.5 disabled:opacity-50"
           >
             <Sparkles size={12} />
             {generate.isPending ? "Generating..." : letter ? "Regenerate" : "Generate"}

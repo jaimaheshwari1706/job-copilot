@@ -87,7 +87,7 @@ export function InterviewHomePage() {
             type="button"
             onClick={handleStartPrep}
             disabled={disabled || startPrep.isPending}
-            className="w-full rounded-lg bg-primary text-white text-sm font-medium py-2 disabled:opacity-50"
+            className="w-full rounded-lg bg-primary-solid text-white text-sm font-medium py-2 disabled:opacity-50"
           >
             {startPrep.isPending ? "Generating..." : "Generate questions"}
           </button>
@@ -109,7 +109,7 @@ export function InterviewHomePage() {
             type="button"
             onClick={handleStartMock}
             disabled={disabled || startMock.isPending}
-            className="w-full rounded-lg bg-primary text-white text-sm font-medium py-2 disabled:opacity-50 mt-auto"
+            className="w-full rounded-lg bg-primary-solid text-white text-sm font-medium py-2 disabled:opacity-50 mt-auto"
           >
             {startMock.isPending ? "Starting..." : "Start mock interview"}
           </button>

@@ -78,7 +78,7 @@ export function AlertsPage() {
         <button
           type="submit"
           disabled={!name.trim() || createAlert.isPending}
-          className="rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
+          className="rounded-lg bg-primary-solid text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
         >
           {createAlert.isPending ? "Creating..." : "Create alert"}
         </button>

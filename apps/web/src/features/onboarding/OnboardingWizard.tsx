@@ -220,7 +220,7 @@ export function OnboardingWizard() {
               <button
                 type="button"
                 onClick={goNext}
-                className="rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5"
+                className="rounded-lg bg-primary-solid text-white text-sm font-medium px-5 py-2.5"
               >
                 Continue
               </button>
@@ -228,7 +228,7 @@ export function OnboardingWizard() {
               <button
                 type="submit"
                 disabled={completeOnboarding.isPending}
-                className="rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
+                className="rounded-lg bg-primary-solid text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
               >
                 {completeOnboarding.isPending ? "Finishing..." : "Finish"}
               </button>

@@ -124,7 +124,7 @@ export function ProfilePage() {
         <button
           type="submit"
           disabled={updateProfile.isPending || !isDirty}
-          className="rounded-lg bg-primary text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
+          className="rounded-lg bg-primary-solid text-white text-sm font-medium px-5 py-2.5 disabled:opacity-50"
         >
           {updateProfile.isPending ? "Saving..." : "Save changes"}
         </button>
