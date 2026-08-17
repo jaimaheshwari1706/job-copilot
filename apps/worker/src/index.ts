@@ -8,10 +8,12 @@ import { createResumeParseWorker } from "./processors/resume-parse.processor.js"
 import { createJobIngestionWorker } from "./processors/job-ingestion.processor.js";
 import { createAlertsWorker } from "./processors/alerts.processor.js";
 import { createDailyBriefWorker } from "./processors/daily-brief.processor.js";
+import { reconcileStuckResumes, scheduleResumeReconciliation } from "./jobs/resume-reconcile.js";
 
 const JOB_INGESTION_INTERVAL_MS = 60 * 60 * 1000; // hourly
 const ALERTS_CHECK_INTERVAL_MS = 60 * 60 * 1000; // hourly (individual alerts still respect their own daily/weekly frequency)
 const DAILY_BRIEF_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
+const RESUME_RECONCILE_INTERVAL_MS = 5 * 60 * 1000; // every 5 minutes
 
 async function main() {
   await connectMongo({ uri: env.MONGO_URI, serviceName: "worker" });
@@ -67,10 +69,15 @@ async function main() {
     "Scheduled recurring background jobs",
   );
 
+  await reconcileStuckResumes().catch((err) => logger.error({ err }, "Initial resume reconciliation sweep failed"));
+  const resumeReconcileTimer = scheduleResumeReconciliation(RESUME_RECONCILE_INTERVAL_MS);
+  logger.info({ intervalMs: RESUME_RECONCILE_INTERVAL_MS }, "Scheduled resume reconciliation sweep");
+
   logger.info("worker started, listening for queued jobs");
 
   const shutdown = async () => {
     logger.info("shutting down worker...");
+    clearInterval(resumeReconcileTimer);
     await Promise.all([
       healthPingWorker.close(),
       resumeParseWorker.close(),

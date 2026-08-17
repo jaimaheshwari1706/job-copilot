@@ -9,6 +9,10 @@ import { env } from "../../config/env.js";
 
 const storage = new LocalStorageProvider(env.STORAGE_DIR);
 
+// Bounds how long we'll wait for the resume-parse job to be enqueued before
+// giving up and surfacing a failed status — see uploadResume() below.
+const ENQUEUE_TIMEOUT_MS = 5000;
+
 function toResumeDto(resume: HydratedDocument<ResumeDoc>): ResumeDto {
   return {
     id: String(resume._id),
@@ -63,12 +67,30 @@ export async function uploadResume(
 
   // Text extraction runs as a background job (Phase 0 §30), not inline in
   // the request — keeps the upload response fast regardless of file size.
+  // Deliberately NOT awaited: if Redis is slow or unreachable, the queue
+  // client (maxRetriesPerRequest: null, required by BullMQ) retries forever
+  // rather than rejecting quickly, so awaiting it here would hang the whole
+  // upload request on Redis health. The resume is already saved; enqueueing
+  // is a best-effort follow-up. If it doesn't succeed within ENQUEUE_TIMEOUT_MS
+  // (including "never resolves because Redis is unreachable"), the record is
+  // marked failed so the UI stops polling and shows an accurate status
+  // instead of "pending" forever.
   const queue = createResumeParseQueue(env.REDIS_URL);
-  await queue.add("parse", {
+  const enqueue = queue.add("parse", {
     resumeId: String(resume._id),
     userId,
     storageKey: resume.storageKey,
     mimeType: resume.mimeType,
+  });
+  const enqueueTimeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Timed out waiting to queue extraction job")), ENQUEUE_TIMEOUT_MS),
+  );
+  Promise.race([enqueue, enqueueTimeout]).catch(async (err: unknown) => {
+    const message = err instanceof Error ? err.message : "Unknown queue error";
+    await Resume.updateOne(
+      { _id: resume._id },
+      { $set: { textExtractionStatus: "failed", parseError: `Could not queue text extraction: ${message}` } },
+    ).catch(() => undefined);
   });
 
   return toResumeDto(resume);
