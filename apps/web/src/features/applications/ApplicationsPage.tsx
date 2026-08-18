@@ -13,7 +13,7 @@ export function ApplicationsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">Applications</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
             {applications ? `${applications.length} tracked` : ""}
           </p>
         </div>
@@ -21,7 +21,7 @@ export function ApplicationsPage() {
           <button
             type="button"
             onClick={() => setView("kanban")}
-            className={`p-1.5 rounded-md ${view === "kanban" ? "bg-primary/10 text-primary" : "text-slate-500"}`}
+            className={`p-1.5 rounded-md ${view === "kanban" ? "bg-primary/10 text-primary" : "text-slate-500 dark:text-slate-400"}`}
             title="Kanban view"
           >
             <LayoutGrid size={16} />
@@ -29,7 +29,7 @@ export function ApplicationsPage() {
           <button
             type="button"
             onClick={() => setView("table")}
-            className={`p-1.5 rounded-md ${view === "table" ? "bg-primary/10 text-primary" : "text-slate-500"}`}
+            className={`p-1.5 rounded-md ${view === "table" ? "bg-primary/10 text-primary" : "text-slate-500 dark:text-slate-400"}`}
             title="Table view"
           >
             <List size={16} />
@@ -38,7 +38,7 @@ export function ApplicationsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading applications...</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Loading applications...</p>
       ) : applications && applications.length > 0 ? (
         view === "kanban" ? (
           <ApplicationsKanban applications={applications} />
@@ -46,7 +46,7 @@ export function ApplicationsPage() {
           <ApplicationsTable applications={applications} />
         )
       ) : (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           No applications tracked yet — clicking "Apply" on a job will add it here automatically.
         </p>
       )}

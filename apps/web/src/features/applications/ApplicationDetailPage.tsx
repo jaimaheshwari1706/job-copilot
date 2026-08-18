@@ -19,12 +19,12 @@ export function ApplicationDetailPage() {
   const addNote = useAddApplicationNote();
   const [noteDraft, setNoteDraft] = useState("");
 
-  if (isLoading) return <p className="text-sm text-slate-500">Loading...</p>;
-  if (!app) return <p className="text-sm text-slate-500">Application not found.</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading...</p>;
+  if (!app) return <p className="text-sm text-slate-500 dark:text-slate-400">Application not found.</p>;
 
   return (
     <div className="max-w-2xl space-y-6">
-      <Link to="/applications" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-primary">
+      <Link to="/applications" className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary">
         <ArrowLeft size={14} /> Back to applications
       </Link>
 
@@ -32,7 +32,7 @@ export function ApplicationDetailPage() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-lg font-semibold">{app.jobSnapshot.title}</h1>
-            <p className="text-sm text-slate-500">{app.jobSnapshot.company}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{app.jobSnapshot.company}</p>
           </div>
           <select
             value={app.status}
@@ -71,12 +71,12 @@ export function ApplicationDetailPage() {
                       ? "Interview scheduled"
                       : "Application created"}
                 </span>
-                <span className="text-xs text-slate-400">{new Date(event.createdAt).toLocaleDateString()}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{new Date(event.createdAt).toLocaleDateString()}</span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-slate-400">No events yet.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">No events yet.</p>
         )}
       </div>
 
@@ -87,7 +87,7 @@ export function ApplicationDetailPage() {
             {notes.map((note) => (
               <li key={note.id} className="text-sm bg-surface-muted rounded-lg p-2.5">
                 <p>{note.content}</p>
-                <p className="text-xs text-slate-400 mt-1">{new Date(note.createdAt).toLocaleString()}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{new Date(note.createdAt).toLocaleString()}</p>
               </li>
             ))}
           </ul>

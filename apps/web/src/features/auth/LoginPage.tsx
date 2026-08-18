@@ -23,7 +23,7 @@ export function LoginPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Log in</h1>
-        <p className="text-sm text-slate-500 mt-1">Welcome back.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Welcome back.</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4">
@@ -43,7 +43,7 @@ export function LoginPage() {
         />
 
         {login.isError && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-600 dark:text-red-400">
             {login.error instanceof ApiRequestError ? login.error.message : "Something went wrong."}
           </p>
         )}
@@ -57,7 +57,7 @@ export function LoginPage() {
         </button>
       </form>
 
-      <div className="flex justify-between text-sm text-slate-500">
+      <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
         <Link to="/forgot-password" className="hover:text-primary">
           Forgot password?
         </Link>

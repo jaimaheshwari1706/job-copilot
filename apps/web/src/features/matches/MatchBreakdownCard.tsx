@@ -19,7 +19,7 @@ function confidenceLabel(confidence: number): string {
 function ScoreBar({ label, value }: { label: string; value: number }) {
   return (
     <div>
-      <div className="flex justify-between text-xs text-slate-500 mb-1">
+      <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
         <span>{label}</span>
         <span>{value}%</span>
       </div>
@@ -33,7 +33,7 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 export function MatchBreakdownCard({ jobId }: { jobId: string }) {
   const { data: match, isLoading } = useMatch(jobId);
 
-  if (isLoading) return <p className="text-sm text-slate-500">Calculating match...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Calculating match...</p>;
   if (!match) return null;
 
   return (
@@ -41,14 +41,14 @@ export function MatchBreakdownCard({ jobId }: { jobId: string }) {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-2xl font-semibold">{match.overallScore}%</p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Confidence: {confidenceLabel(match.confidence)} ({Math.round(match.confidence * 100)}%)
           </p>
         </div>
       </div>
 
       {match.confidence < 0.6 && (
-        <p className="text-xs text-slate-400 bg-surface-muted rounded-lg p-2.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 bg-surface-muted rounded-lg p-2.5">
           This job listing or your profile is missing information the matcher would normally use
           (e.g. project history, education, or a detailed job description) — treat this score as a
           rough estimate rather than a precise ranking.
@@ -63,10 +63,10 @@ export function MatchBreakdownCard({ jobId }: { jobId: string }) {
 
       {match.penalties.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-slate-500 mb-1.5">Why this scored lower</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Why this scored lower</p>
           <ul className="space-y-1">
             {match.penalties.map((p, i) => (
-              <li key={i} className="text-xs text-red-600">
+              <li key={i} className="text-xs text-red-600 dark:text-red-400">
                 • {p.reason}
               </li>
             ))}
@@ -76,7 +76,7 @@ export function MatchBreakdownCard({ jobId }: { jobId: string }) {
 
       {match.matchedSkills.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-slate-500 mb-1.5">Matched skills</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Matched skills</p>
           <div className="flex flex-wrap gap-1.5">
             {match.matchedSkills.map((s) => (
               <span
@@ -92,7 +92,7 @@ export function MatchBreakdownCard({ jobId }: { jobId: string }) {
 
       {match.missingRequiredSkills.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-slate-500 mb-1.5">Missing required skills</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Missing required skills</p>
           <div className="flex flex-wrap gap-1.5">
             {match.missingRequiredSkills.map((s) => (
               <span

@@ -31,14 +31,14 @@ export function JobsPage() {
     <div className="max-w-3xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Discover Jobs</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           {data ? `${data.total} job${data.total === 1 ? "" : "s"} found` : "Search for roles"}
         </p>
       </div>
 
       <div className="rounded-xl border border-border bg-surface p-4 flex flex-wrap gap-3">
         <div className="flex items-center gap-2 flex-1 min-w-[200px] rounded-lg border border-border px-3 py-2">
-          <Search size={16} className="text-slate-400" />
+          <Search size={16} className="text-slate-500 dark:text-slate-400" />
           <input
             value={keywords}
             onChange={(e) => {
@@ -75,7 +75,7 @@ export function JobsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading jobs...</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Loading jobs...</p>
       ) : data && data.jobs.length > 0 ? (
         <>
           <div className={`space-y-3 transition-opacity ${isFetching ? "opacity-60" : ""}`}>
@@ -94,7 +94,7 @@ export function JobsPage() {
               >
                 Previous
               </button>
-              <span className="text-slate-500">
+              <span className="text-slate-500 dark:text-slate-400">
                 Page {page} of {totalPages}
               </span>
               <button
@@ -109,7 +109,7 @@ export function JobsPage() {
           )}
         </>
       ) : (
-        <p className="text-sm text-slate-500">No jobs match your search.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">No jobs match your search.</p>
       )}
     </div>
   );

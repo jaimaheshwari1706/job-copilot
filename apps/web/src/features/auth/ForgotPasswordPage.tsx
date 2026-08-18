@@ -20,11 +20,11 @@ export function ForgotPasswordPage() {
     return (
       <div className="space-y-4">
         <h1 className="text-lg font-semibold">Check your email</h1>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           If that email is registered, a reset link is on its way.
         </p>
         {devToken && (
-          <div className="rounded-lg border border-dashed border-border p-3 text-xs text-slate-500 space-y-2">
+          <div className="rounded-lg border border-dashed border-border p-3 text-xs text-slate-500 dark:text-slate-400 space-y-2">
             <p>No email provider is configured yet — dev-only token:</p>
             <code className="block break-all">{devToken}</code>
             <Link
@@ -43,7 +43,7 @@ export function ForgotPasswordPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Forgot password</h1>
-        <p className="text-sm text-slate-500 mt-1">We'll send you a reset link.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">We'll send you a reset link.</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4">
@@ -63,7 +63,7 @@ export function ForgotPasswordPage() {
         </button>
       </form>
 
-      <Link to="/login" className="text-sm text-slate-500 hover:text-primary">
+      <Link to="/login" className="text-sm text-slate-500 dark:text-slate-400 hover:text-primary">
         Back to log in
       </Link>
     </div>

@@ -30,7 +30,7 @@ export function ResetPasswordPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Reset password</h1>
-        <p className="text-sm text-slate-500 mt-1">Choose a new password.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Choose a new password.</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4">
@@ -44,7 +44,7 @@ export function ResetPasswordPage() {
         />
 
         {resetPassword.isError && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-600 dark:text-red-400">
             {resetPassword.error instanceof ApiRequestError
               ? resetPassword.error.message
               : "Something went wrong."}
@@ -60,7 +60,7 @@ export function ResetPasswordPage() {
         </button>
       </form>
 
-      <Link to="/login" className="text-sm text-slate-500 hover:text-primary">
+      <Link to="/login" className="text-sm text-slate-500 dark:text-slate-400 hover:text-primary">
         Back to log in
       </Link>
     </div>

@@ -6,7 +6,7 @@ function DemandBar({ label, percentage, jobsUnlocked }: { label: string; percent
     <div>
       <div className="flex justify-between text-sm mb-1">
         <span className="font-medium">{label}</span>
-        <span className="text-slate-500">{percentage}% of relevant jobs</span>
+        <span className="text-slate-500 dark:text-slate-400">{percentage}% of relevant jobs</span>
       </div>
       <div className="h-2 rounded-full bg-surface-muted overflow-hidden">
         <div className="h-full bg-primary" style={{ width: `${percentage}%` }} />
@@ -23,21 +23,21 @@ function DemandBar({ label, percentage, jobsUnlocked }: { label: string; percent
 export function SkillsPage() {
   const { data, isLoading } = useSkillGapAnalysis();
 
-  if (isLoading) return <p className="text-sm text-slate-500">Analyzing your skills against the job market...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Analyzing your skills against the job market...</p>;
   if (!data) return null;
 
   return (
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Skill Analysis</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Calculated from {data.totalRelevantJobs} job{data.totalRelevantJobs === 1 ? "" : "s"} you're a
           reasonable match for — not AI-guessed, counted directly from real job requirements.
         </p>
       </div>
 
       {data.totalRelevantJobs === 0 ? (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           No relevant jobs found yet to analyze against. Browse and save some jobs, or complete your
           profile to improve matching.
         </p>
@@ -59,7 +59,7 @@ export function SkillsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-slate-500">None of your current skills appear in relevant jobs yet.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">None of your current skills appear in relevant jobs yet.</p>
             )}
           </div>
 
@@ -79,7 +79,7 @@ export function SkillsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 You already have every skill that appears across your relevant jobs.
               </p>
             )}

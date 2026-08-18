@@ -22,7 +22,7 @@ function ApplicationCard({ app, onDragStart }: { app: Application; onDragStart: 
       className="block rounded-lg border border-border bg-surface p-3 text-sm hover:border-primary/40 cursor-grab active:cursor-grabbing"
     >
       <p className="font-medium truncate">{app.jobSnapshot.title}</p>
-      <p className="text-xs text-slate-500 truncate">{app.jobSnapshot.company}</p>
+      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{app.jobSnapshot.company}</p>
     </Link>
   );
 }
@@ -61,10 +61,10 @@ export function ApplicationsKanban({ applications }: { applications: Application
             }`}
           >
             <div className="flex items-center justify-between px-1">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 {STATUS_LABELS[status]}
               </h3>
-              <span className="text-xs text-slate-400">{columnApps.length}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{columnApps.length}</span>
             </div>
             <div className="space-y-2 min-h-[40px]">
               {columnApps.map((app) => (

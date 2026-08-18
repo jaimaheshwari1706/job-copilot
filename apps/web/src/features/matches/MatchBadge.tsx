@@ -11,7 +11,7 @@ export function MatchBadge({ jobId }: { jobId: string }) {
   const { data: match, isLoading } = useMatch(jobId);
 
   if (isLoading || !match) {
-    return <span className="text-xs text-slate-400">Match: —</span>;
+    return <span className="text-xs text-slate-500 dark:text-slate-400">Match: —</span>;
   }
 
   return (

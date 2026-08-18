@@ -14,7 +14,7 @@ from other docs stay stable.
 | 2 | 🔵 Low | Dependencies | esbuild/vite/vitest dev-tooling chain has 1 critical + 2 moderate advisories (dev-server only) | Documented, not fixed (needs vite@8/vitest@4 bump) |
 | 3 | 🟡 Medium | Frontend/backend gap | Three working backend features have no frontend UI at all | Documented, not fixed (product decision needed) |
 | 4 | 🟠 High | Dark mode | Primary buttons (`bg-primary text-white`) fail WCAG AA contrast in dark mode | ✅ Fixed & verified (typecheck/lint clean; visual re-check pending Playwright) |
-| 5 | 🟡 Medium | Dark mode | Muted/secondary text (`text-slate-500/600/400`, unprefixed) fails WCAG AA in dark mode in ~32 files | Confirmed via contrast math; scoping fix pending visual verification |
+| 5 | 🟡 Medium | Dark mode | Muted/secondary text (`text-slate-500/600/400`, unprefixed) fails WCAG AA in dark mode in ~32 files | ✅ Fixed & verified (see update below) |
 | 6 | 🔵 Low | Performance | Dashboard/skill-gap match loops ran sequentially instead of parallel | ✅ Fixed & verified (honest perf note below — see caveat) |
 | 7 | 🟠 High | Responsive/Mobile | No navigation exists on mobile viewports at all | Documented, not fixed (needs a real mobile-nav component) |
 
@@ -157,6 +157,41 @@ per page rather than mechanically.
 verification that this is real, not a guess; a visual pass (Playwright
 screenshots, Phase 24) can help prioritize which of the 32 files are
 worst in practice before committing to the full fix.
+
+### Update — fixed
+
+Applied the recommended fix mechanically across the full `apps/web/src`
+tree (32 files, 160 lines): every bare `text-slate-400` or `text-slate-500`
+→ `text-slate-500 dark:text-slate-400`; every bare `text-slate-600` →
+`text-slate-600 dark:text-slate-400`. Script-driven with a per-line guard
+that skips any line already containing a `dark:text-slate-*` pairing, so
+the 14 files that already had it correct were left untouched. Verified
+0 bare occurrences remain (`grep`), 0 duplicate `dark:` pairs introduced,
+`typecheck`/`lint`/`build` clean, and full Playwright suite (23/23,
+including regenerated dark-mode screenshots for login/dashboard/jobs)
+passing.
+
+While auditing every panel for this pass (per a follow-up request to
+check the whole app, not just re-verify this one bug), found and fixed
+three more dark-mode gaps in the same family, none previously catalogued:
+- Bare `text-red-600` (error messages — form validation, login/register
+  failures, extraction failures) computed to 3.85:1 against the dark
+  surface, failing AA the same way. Fixed the same way, 18 sites:
+  `text-red-600 dark:text-red-400` (6.72:1).
+- `SystemHealthPage.tsx`'s local `StatusPill` "checking..." state used
+  `bg-slate-200 text-slate-600` with **no dark variant at all** — a
+  literal light-gray box on the dark surface. Fixed to match the
+  already-correct sibling pattern used by the resume module's
+  `StatusPill.tsx`: `bg-slate-100 text-slate-600 dark:bg-slate-800
+  dark:text-slate-300`.
+- `MatchBadge.tsx`'s loading fallback (`text-xs text-slate-400`, no
+  background) was swept up by the same mechanical fix as the other bare
+  `text-slate-400` cases.
+
+Confirmed no other unpaired `bg-white/black/gray-*/slate-*` or
+`border-*` instances exist anywhere in `apps/web/src` (full-repo grep,
+zero remaining matches) — the app has no modal/dropdown/tooltip
+components to separately audit.
 
 ## #6 — Dashboard / skill-gap match loops ran sequentially, not in parallel
 

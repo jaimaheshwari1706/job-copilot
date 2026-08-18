@@ -33,14 +33,14 @@ export function JobDetailPage() {
   const unsaveJob = useUnsaveJob();
   const createApplication = useCreateApplication();
 
-  if (isLoading) return <p className="text-sm text-slate-500">Loading job...</p>;
-  if (!job) return <p className="text-sm text-slate-500">Job not found.</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading job...</p>;
+  if (!job) return <p className="text-sm text-slate-500 dark:text-slate-400">Job not found.</p>;
 
   const isSaved = job.savedStatus === "saved";
 
   return (
     <div className="max-w-2xl space-y-6">
-      <Link to="/jobs" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-primary">
+      <Link to="/jobs" className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary">
         <ArrowLeft size={14} /> Back to jobs
       </Link>
 
@@ -48,13 +48,13 @@ export function JobDetailPage() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-lg font-semibold">{job.title}</h1>
-            <p className="text-sm text-slate-500">{job.company}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{job.company}</p>
           </div>
           <div className="flex items-center gap-1 shrink-0">
             <button
               type="button"
               onClick={() => (isSaved ? unsaveJob.mutate(job.id) : saveJob.mutate(job.id))}
-              className="p-2 rounded-lg border border-border hover:bg-surface-muted text-slate-500"
+              className="p-2 rounded-lg border border-border hover:bg-surface-muted text-slate-500 dark:text-slate-400"
               title={isSaved ? "Unsave" : "Save"}
             >
               {isSaved ? <BookmarkCheck size={18} className="text-primary" /> : <Bookmark size={18} />}
@@ -62,7 +62,7 @@ export function JobDetailPage() {
             <button
               type="button"
               onClick={() => hideJob.mutate(job.id)}
-              className="p-2 rounded-lg border border-border hover:bg-surface-muted text-slate-500"
+              className="p-2 rounded-lg border border-border hover:bg-surface-muted text-slate-500 dark:text-slate-400"
               title="Not interested"
             >
               <EyeOff size={18} />
@@ -70,7 +70,7 @@ export function JobDetailPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-slate-500">
+        <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-slate-500 dark:text-slate-400">
           {job.location && (
             <span className="inline-flex items-center gap-1.5">
               <MapPin size={14} /> {job.location}
@@ -111,7 +111,7 @@ export function JobDetailPage() {
           Apply on company site →
         </button>
         {createApplication.isSuccess && (
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
             Added to your{" "}
             <Link to="/applications" className="text-primary hover:underline">
               applications tracker

@@ -6,7 +6,7 @@ import { apiClient } from "../lib/api-client";
 function StatusPill({ label, ok }: { label: string; ok: boolean | undefined }) {
   const color =
     ok === undefined
-      ? "bg-slate-200 text-slate-600"
+      ? "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
       : ok
         ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
         : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300";
@@ -44,7 +44,7 @@ export function SystemHealthPage() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">System Health</h1>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Phase 1 infrastructure check: web → api → Mongo/Redis, and api → BullMQ → worker → Mongo.
         </p>
       </div>
@@ -56,7 +56,7 @@ export function SystemHealthPage() {
           <StatusPill label="redis" ok={readiness.data?.checks?.redis === "ok"} />
         </div>
         {readiness.isError && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-600 dark:text-red-400">
             Could not reach the API at all — is it running? See README for local setup.
           </p>
         )}
@@ -73,7 +73,7 @@ export function SystemHealthPage() {
           {enqueuePing.isPending ? "Enqueuing..." : "Send health ping to worker"}
         </button>
         {pingId && (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             ping <code>{pingId}</code>:{" "}
             {pingResult.data?.received ? "processed by worker ✅" : "waiting for worker..."}
           </p>

@@ -34,7 +34,7 @@ export function RecommendedJobsPage() {
     <div className="max-w-3xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Recommended Jobs</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           {data ? `${data.total} job${data.total === 1 ? "" : "s"} ranked by match` : "Ranked by fit for your profile"}
         </p>
       </div>
@@ -48,7 +48,7 @@ export function RecommendedJobsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Ranking jobs for you...</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Ranking jobs for you...</p>
       ) : data && data.jobs.length > 0 ? (
         <div className={`space-y-3 transition-opacity ${isFetching ? "opacity-60" : ""}`}>
           {data.jobs.map((job) => (
@@ -56,7 +56,7 @@ export function RecommendedJobsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           No jobs match these filters yet. Complete your profile and skills to improve recommendations.
         </p>
       )}

@@ -8,7 +8,7 @@ export function ApplicationsTable({ applications }: { applications: Application[
   return (
     <div className="rounded-xl border border-border bg-surface overflow-hidden">
       <table className="w-full text-sm">
-        <thead className="bg-surface-muted text-xs text-slate-500 uppercase">
+        <thead className="bg-surface-muted text-xs text-slate-500 dark:text-slate-400 uppercase">
           <tr>
             <th className="text-left px-4 py-2.5 font-medium">Role</th>
             <th className="text-left px-4 py-2.5 font-medium">Company</th>
@@ -24,7 +24,7 @@ export function ApplicationsTable({ applications }: { applications: Application[
                   {app.jobSnapshot.title}
                 </Link>
               </td>
-              <td className="px-4 py-2.5 text-slate-500">{app.jobSnapshot.company}</td>
+              <td className="px-4 py-2.5 text-slate-500 dark:text-slate-400">{app.jobSnapshot.company}</td>
               <td className="px-4 py-2.5">
                 <select
                   value={app.status}
@@ -40,7 +40,7 @@ export function ApplicationsTable({ applications }: { applications: Application[
                   ))}
                 </select>
               </td>
-              <td className="px-4 py-2.5 text-slate-400 text-xs">
+              <td className="px-4 py-2.5 text-slate-500 dark:text-slate-400 text-xs">
                 {new Date(app.updatedAt).toLocaleDateString()}
               </td>
             </tr>

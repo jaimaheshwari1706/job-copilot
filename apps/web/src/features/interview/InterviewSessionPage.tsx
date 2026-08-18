@@ -29,15 +29,15 @@ export function InterviewSessionPage() {
   const submitAnswer = useSubmitMockAnswer();
   const [draft, setDraft] = useState("");
 
-  if (isLoading) return <p className="text-sm text-slate-500">Loading...</p>;
-  if (!session) return <p className="text-sm text-slate-500">Session not found.</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading...</p>;
+  if (!session) return <p className="text-sm text-slate-500 dark:text-slate-400">Session not found.</p>;
 
   const lastQuestion = session.questions[session.questions.length - 1];
   const awaitingAnswer = session.type === "mock" && session.status === "active" && lastQuestion && !lastQuestion.userAnswer;
 
   return (
     <div className="max-w-2xl space-y-6">
-      <Link to="/interview" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-primary">
+      <Link to="/interview" className="inline-flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary">
         <ArrowLeft size={14} /> Back to interview prep
       </Link>
 
@@ -45,7 +45,7 @@ export function InterviewSessionPage() {
         <h1 className="text-lg font-semibold capitalize">
           {session.type === "prep" ? "Prep Questions" : "Mock Interview"}
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           {session.status === "completed" ? "Completed" : "In progress"} · {session.questions.length} question
           {session.questions.length === 1 ? "" : "s"}
         </p>
@@ -63,7 +63,7 @@ export function InterviewSessionPage() {
 
             {q.userAnswer && (
               <div className="rounded-lg bg-surface-muted p-3">
-                <p className="text-xs text-slate-500 mb-1">Your answer</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Your answer</p>
                 <p className="text-sm whitespace-pre-line">{q.userAnswer}</p>
               </div>
             )}
@@ -72,13 +72,13 @@ export function InterviewSessionPage() {
               <div className="space-y-2 pt-2 border-t border-border">
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-semibold">{q.evaluation.score}/100</span>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                     <HelpCircle size={12} /> {CONFIDENCE_LABEL[q.evaluation.confidence]}
                   </span>
                 </div>
                 {q.evaluation.strengths.length > 0 && (
                   <div className="text-sm">
-                    <p className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1">
                       <CheckCircle2 size={12} className="text-emerald-500" /> Strengths
                     </p>
                     <ul className="list-disc list-inside text-slate-600 dark:text-slate-300">
@@ -90,7 +90,7 @@ export function InterviewSessionPage() {
                 )}
                 {q.evaluation.missingConcepts.length > 0 && (
                   <div className="text-sm">
-                    <p className="text-xs font-medium text-slate-500 mb-1 flex items-center gap-1">
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1">
                       <XCircle size={12} className="text-amber-500" /> Missing concepts
                     </p>
                     <ul className="list-disc list-inside text-slate-600 dark:text-slate-300">
@@ -102,7 +102,7 @@ export function InterviewSessionPage() {
                 )}
                 {q.evaluation.betterAnswerStructure && (
                   <div className="text-sm">
-                    <p className="text-xs font-medium text-slate-500 mb-1">A stronger answer would...</p>
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">A stronger answer would...</p>
                     <p className="text-slate-600 dark:text-slate-300">{q.evaluation.betterAnswerStructure}</p>
                   </div>
                 )}
@@ -131,7 +131,7 @@ export function InterviewSessionPage() {
             {submitAnswer.isPending ? "Evaluating..." : "Submit answer"}
           </button>
           {submitAnswer.isError && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-red-600 dark:text-red-400">
               {submitAnswer.error instanceof ApiRequestError ? submitAnswer.error.message : "Something went wrong."}
             </p>
           )}

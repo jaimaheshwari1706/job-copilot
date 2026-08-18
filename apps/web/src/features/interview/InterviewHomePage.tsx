@@ -48,13 +48,13 @@ export function InterviewHomePage() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Interview Preparation</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Generate practice questions, or run a mock interview with feedback on each answer.
         </p>
       </div>
 
       {disabled && (
-        <p className="text-xs text-slate-400 bg-surface-muted rounded-lg p-2.5 flex items-start gap-1.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 bg-surface-muted rounded-lg p-2.5 flex items-start gap-1.5">
           <AlertCircle size={13} className="mt-0.5 shrink-0" />
           AI features aren't configured on this server, so interview prep and mock interviews aren't
           available right now.
@@ -66,7 +66,7 @@ export function InterviewHomePage() {
           <div className="flex items-center gap-2 text-sm font-medium">
             <BookOpen size={16} className="text-primary" /> Prep Questions
           </div>
-          <p className="text-xs text-slate-500">Generate a set of questions across categories to review.</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Generate a set of questions across categories to review.</p>
           <div className="flex flex-wrap gap-1.5">
             {(Object.keys(CATEGORY_LABELS) as InterviewQuestionCategory[]).map((cat) => (
               <button
@@ -76,7 +76,7 @@ export function InterviewHomePage() {
                 className={`rounded-full px-2.5 py-1 text-xs border ${
                   selectedCategories.includes(cat)
                     ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-slate-500"
+                    : "border-border text-slate-500 dark:text-slate-400"
                 }`}
               >
                 {CATEGORY_LABELS[cat]}
@@ -92,7 +92,7 @@ export function InterviewHomePage() {
             {startPrep.isPending ? "Generating..." : "Generate questions"}
           </button>
           {startPrep.isError && (
-            <p className="text-xs text-red-600">
+            <p className="text-xs text-red-600 dark:text-red-400">
               {startPrep.error instanceof ApiRequestError ? startPrep.error.message : "Something went wrong."}
             </p>
           )}
@@ -102,7 +102,7 @@ export function InterviewHomePage() {
           <div className="flex items-center gap-2 text-sm font-medium">
             <MessagesSquare size={16} className="text-primary" /> Mock Interview
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Answer one question at a time and get feedback with a follow-up question, up to 5 rounds.
           </p>
           <button
@@ -114,7 +114,7 @@ export function InterviewHomePage() {
             {startMock.isPending ? "Starting..." : "Start mock interview"}
           </button>
           {startMock.isError && (
-            <p className="text-xs text-red-600">
+            <p className="text-xs text-red-600 dark:text-red-400">
               {startMock.error instanceof ApiRequestError ? startMock.error.message : "Something went wrong."}
             </p>
           )}
@@ -124,7 +124,7 @@ export function InterviewHomePage() {
       <div>
         <h2 className="text-sm font-medium mb-2">Past sessions</h2>
         {isLoading ? (
-          <p className="text-sm text-slate-500">Loading...</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Loading...</p>
         ) : sessions && sessions.length > 0 ? (
           <div className="space-y-2">
             {sessions.map((session) => (
@@ -137,11 +137,11 @@ export function InterviewHomePage() {
                   <span className="font-medium capitalize">
                     {session.type === "prep" ? "Prep questions" : "Mock interview"}
                   </span>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
                     {new Date(session.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   {session.questions.length} question{session.questions.length === 1 ? "" : "s"} ·{" "}
                   {session.status}
                 </p>
@@ -149,7 +149,7 @@ export function InterviewHomePage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-500">No sessions yet.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">No sessions yet.</p>
         )}
       </div>
     </div>

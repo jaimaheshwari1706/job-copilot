@@ -14,11 +14,11 @@ export function Topbar() {
   return (
     <header className="h-14 shrink-0 border-b border-border bg-surface px-4 flex items-center justify-between gap-4">
       <div className="flex items-center gap-2 flex-1 max-w-md">
-        <Search size={16} className="text-slate-400" />
+        <Search size={16} className="text-slate-500 dark:text-slate-400" />
         <input
           type="search"
           placeholder="Search jobs, companies, skills..."
-          className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+          className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500 dark:text-slate-400"
         />
       </div>
       <div className="flex items-center gap-2">

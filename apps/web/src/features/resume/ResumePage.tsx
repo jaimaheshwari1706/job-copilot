@@ -32,7 +32,7 @@ function ResumeRow({ resume }: { resume: Resume }) {
   return (
     <div className="rounded-xl border border-border bg-surface">
       <div className="flex items-center gap-3 p-4">
-        <FileText size={20} className="text-slate-400 shrink-0" />
+        <FileText size={20} className="text-slate-500 dark:text-slate-400 shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <button
@@ -48,7 +48,7 @@ function ResumeRow({ resume }: { resume: Resume }) {
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">{formatSize(resume.sizeBytes)}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{formatSize(resume.sizeBytes)}</p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -59,7 +59,7 @@ function ResumeRow({ resume }: { resume: Resume }) {
               onClick={() => setPrimary.mutate(resume.id)}
               disabled={setPrimary.isPending}
               title="Set as primary"
-              className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500"
+              className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500 dark:text-slate-400"
             >
               <Star size={16} />
             </button>
@@ -69,7 +69,7 @@ function ResumeRow({ resume }: { resume: Resume }) {
             onClick={handleDownload}
             disabled={downloadUrl.isPending}
             title="Download"
-            className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500"
+            className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500 dark:text-slate-400"
           >
             <Download size={16} />
           </button>
@@ -78,7 +78,7 @@ function ResumeRow({ resume }: { resume: Resume }) {
             onClick={() => deleteResume.mutate(resume.id)}
             disabled={deleteResume.isPending}
             title="Delete"
-            className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-600"
+            className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:text-red-400"
           >
             <Trash2 size={16} />
           </button>
@@ -87,13 +87,13 @@ function ResumeRow({ resume }: { resume: Resume }) {
 
       {expanded && (
         <div className="border-t border-border p-4 space-y-3">
-          <div className="flex flex-wrap gap-4 text-xs text-slate-500">
+          <div className="flex flex-wrap gap-4 text-xs text-slate-500 dark:text-slate-400">
             <span>Text extraction: <StatusPill status={resume.textExtractionStatus} /></span>
             <span>Structured data: <StatusPill status={resume.structureExtractionStatus} /></span>
           </div>
 
           {resume.structureExtractionStatus === "not_started" && (
-            <p className="text-xs text-slate-400 flex items-center gap-1.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
               <AlertCircle size={13} />
               AI-powered structured extraction (skills, employment history, education) ships in a
               later phase. Extracted plain text is available below in the meantime.
@@ -101,12 +101,12 @@ function ResumeRow({ resume }: { resume: Resume }) {
           )}
 
           {resume.textExtractionStatus === "failed" && resume.parseError && (
-            <p className="text-xs text-red-600">Extraction failed: {resume.parseError}</p>
+            <p className="text-xs text-red-600 dark:text-red-400">Extraction failed: {resume.parseError}</p>
           )}
 
           {resume.textExtractionStatus === "complete" && resume.rawText && (
             <div>
-              <p className="text-xs font-medium text-slate-500 mb-1">Extracted text preview</p>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Extracted text preview</p>
               <pre className="text-xs bg-surface-muted rounded-lg p-3 max-h-48 overflow-y-auto whitespace-pre-wrap font-sans">
                 {resume.rawText.slice(0, 2000)}
                 {resume.rawText.length > 2000 ? "…" : ""}
@@ -134,7 +134,7 @@ export function ResumePage() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Resume</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Upload a PDF or DOCX resume. Text extraction runs automatically in the background.
         </p>
       </div>
@@ -155,11 +155,11 @@ export function ResumePage() {
           dragOver ? "border-primary bg-primary/5" : "border-border hover:bg-surface-muted"
         }`}
       >
-        <UploadCloud size={28} className="mx-auto text-slate-400 mb-2" />
+        <UploadCloud size={28} className="mx-auto text-slate-500 dark:text-slate-400 mb-2" />
         <p className="text-sm">
           <span className="text-primary font-medium">Click to upload</span> or drag and drop
         </p>
-        <p className="text-xs text-slate-400 mt-1">PDF or DOCX, up to 10MB</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">PDF or DOCX, up to 10MB</p>
         <input
           ref={fileInputRef}
           type="file"
@@ -170,10 +170,10 @@ export function ResumePage() {
       </div>
 
       {uploadResume.isPending && (
-        <p className="text-sm text-slate-500">Uploading...</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Uploading...</p>
       )}
       {uploadResume.isError && (
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-red-600 dark:text-red-400">
           {uploadResume.error instanceof ApiRequestError
             ? uploadResume.error.message
             : "Upload failed."}
@@ -181,7 +181,7 @@ export function ResumePage() {
       )}
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading resumes...</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Loading resumes...</p>
       ) : resumes && resumes.length > 0 ? (
         <div className="space-y-3">
           {resumes.map((resume) => (
@@ -189,7 +189,7 @@ export function ResumePage() {
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-500">No resumes uploaded yet.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">No resumes uploaded yet.</p>
       )}
     </div>
   );

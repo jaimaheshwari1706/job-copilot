@@ -9,13 +9,13 @@ export function SavedJobsPage() {
     <div className="max-w-3xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Saved Jobs</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           {jobs ? `${jobs.length} saved job${jobs.length === 1 ? "" : "s"}` : ""}
         </p>
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading...</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Loading...</p>
       ) : jobs && jobs.length > 0 ? (
         <div className="space-y-3">
           {jobs.map((job) => (
@@ -23,7 +23,7 @@ export function SavedJobsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           No saved jobs yet — browse{" "}
           <Link to="/jobs" className="text-primary hover:underline">
             open roles

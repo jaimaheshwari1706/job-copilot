@@ -6,7 +6,7 @@ import { useAiStatus, useAnalyzeJobDescription } from "./ai.api";
 function ScoreBar({ label, value }: { label: string; value: number }) {
   return (
     <div>
-      <div className="flex justify-between text-xs text-slate-500 mb-1">
+      <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
         <span>{label}</span>
         <span>{value}%</span>
       </div>
@@ -33,14 +33,14 @@ export function JdAnalyzerPage() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Analyze a Job Description</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Paste a job posting from anywhere — LinkedIn, a company site, an email — to see how well it
           matches your profile.
         </p>
       </div>
 
       {aiStatus && !aiStatus.configured && (
-        <p className="text-xs text-slate-400 bg-surface-muted rounded-lg p-2.5 flex items-start gap-1.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 bg-surface-muted rounded-lg p-2.5 flex items-start gap-1.5">
           <AlertCircle size={13} className="mt-0.5 shrink-0" />
           AI commentary isn't configured on this server — you'll still get the full deterministic
           match breakdown below, just without AI-written strengths/weaknesses/suggestions.
@@ -56,7 +56,7 @@ export function JdAnalyzerPage() {
           className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/40"
         />
         {text.length > 0 && text.trim().length < 50 && (
-          <p className="text-xs text-red-600">Paste at least 50 characters.</p>
+          <p className="text-xs text-red-600 dark:text-red-400">Paste at least 50 characters.</p>
         )}
         <button
           type="submit"
@@ -66,7 +66,7 @@ export function JdAnalyzerPage() {
           {analyze.isPending ? "Analyzing..." : "Analyze"}
         </button>
         {analyze.isError && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-600 dark:text-red-400">
             {analyze.error instanceof ApiRequestError ? analyze.error.message : "Something went wrong."}
           </p>
         )}
@@ -76,7 +76,7 @@ export function JdAnalyzerPage() {
         <div className="rounded-xl border border-border bg-surface p-6 space-y-5">
           <div>
             <p className="text-2xl font-semibold">{result.overallScore}%</p>
-            <p className="text-xs text-slate-500">Confidence: {Math.round(result.confidence * 100)}%</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Confidence: {Math.round(result.confidence * 100)}%</p>
           </div>
 
           <div className="space-y-3">
@@ -88,7 +88,7 @@ export function JdAnalyzerPage() {
 
           {result.matchedSkills.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-slate-500 mb-1.5">Matched skills</p>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Matched skills</p>
               <div className="flex flex-wrap gap-1.5">
                 {result.matchedSkills.map((s) => (
                   <span key={s} className="rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs px-2 py-0.5">
@@ -101,7 +101,7 @@ export function JdAnalyzerPage() {
 
           {result.missingRequiredSkills.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-slate-500 mb-1.5">Missing skills</p>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">Missing skills</p>
               <div className="flex flex-wrap gap-1.5">
                 {result.missingRequiredSkills.map((s) => (
                   <span key={s} className="rounded-md bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs px-2 py-0.5">
@@ -120,7 +120,7 @@ export function JdAnalyzerPage() {
               {(["strengths", "weaknesses", "suggestions"] as const).map((key) =>
                 result.aiCommentary![key].length > 0 ? (
                   <div key={key}>
-                    <p className="text-xs font-medium text-slate-500 mb-1 capitalize">{key}</p>
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 capitalize">{key}</p>
                     <ul className="list-disc list-inside space-y-0.5 text-sm text-slate-600 dark:text-slate-300">
                       {result.aiCommentary![key].map((item, i) => (
                         <li key={i}>{item}</li>
@@ -131,7 +131,7 @@ export function JdAnalyzerPage() {
               )}
             </div>
           ) : (
-            <p className="text-xs text-slate-400 pt-2 border-t border-border">
+            <p className="text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-border">
               AI commentary unavailable — showing the deterministic match analysis only.
             </p>
           )}

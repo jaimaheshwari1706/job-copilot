@@ -17,7 +17,7 @@ const STATUS_LABELS: Record<string, string> = {
 function StatCard({ icon: Icon, label, value }: { icon: typeof Briefcase; label: string; value: string | number }) {
   return (
     <div className="rounded-xl border border-border bg-surface p-4">
-      <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+      <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-1">
         <Icon size={14} /> {label}
       </div>
       <p className="text-2xl font-semibold">{value}</p>
@@ -32,7 +32,7 @@ function FunnelBar({ funnel }: { funnel: DashboardStats["applicationFunnel"] }) 
     <div className="space-y-2">
       {order.map((status) => (
         <div key={status}>
-          <div className="flex justify-between text-xs text-slate-500 mb-1">
+          <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
             <span>{STATUS_LABELS[status]}</span>
             <span>{funnel[status] ?? 0}</span>
           </div>
@@ -48,14 +48,14 @@ function FunnelBar({ funnel }: { funnel: DashboardStats["applicationFunnel"] }) 
 export function DashboardPage() {
   const { data: stats, isLoading } = useDashboardStats();
 
-  if (isLoading) return <p className="text-sm text-slate-500">Loading your dashboard...</p>;
+  if (isLoading) return <p className="text-sm text-slate-500 dark:text-slate-400">Loading your dashboard...</p>;
   if (!stats) return null;
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Dashboard</h1>
-        <p className="text-sm text-slate-500 mt-1">Your job search at a glance.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Your job search at a glance.</p>
       </div>
 
       {stats.aiInsight && (
@@ -80,7 +80,7 @@ export function DashboardPage() {
         <div className="rounded-xl border border-border bg-surface p-5 space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-medium">Application funnel</h2>
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-slate-500 dark:text-slate-400">
               {stats.applicationsCount} total
               {stats.interviewConversionRate !== null && ` · ${stats.interviewConversionRate}% reach interview`}
             </span>
@@ -99,15 +99,15 @@ export function DashboardPage() {
                   <Link to={`/applications/${item.applicationId}`} className="font-medium hover:text-primary">
                     {item.jobTitle}
                   </Link>
-                  <span className="text-slate-500"> at {item.company}</span>
-                  <p className="text-xs text-slate-400">
+                  <span className="text-slate-500 dark:text-slate-400"> at {item.company}</span>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     {item.description} · {new Date(item.createdAt).toLocaleDateString()}
                   </p>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-slate-500">No activity yet.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">No activity yet.</p>
           )}
         </div>
       </div>
@@ -126,7 +126,7 @@ export function DashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-500">Complete your profile to get recommendations.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Complete your profile to get recommendations.</p>
         )}
       </div>
 

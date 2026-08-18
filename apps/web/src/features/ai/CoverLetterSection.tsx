@@ -36,7 +36,7 @@ export function CoverLetterSection({ jobId }: { jobId: string }) {
     return (
       <div className="rounded-xl border border-border bg-surface p-6">
         <h2 className="text-sm font-medium mb-2">Cover Letter</h2>
-        <p className="text-xs text-slate-400 flex items-start gap-1.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-1.5">
           <AlertCircle size={13} className="mt-0.5 shrink-0" />
           AI features aren't configured on this server, so cover letter generation isn't available
           right now.
@@ -74,7 +74,7 @@ export function CoverLetterSection({ jobId }: { jobId: string }) {
       </div>
 
       {generate.isError && (
-        <p className="text-sm text-red-600">
+        <p className="text-sm text-red-600 dark:text-red-400">
           {generate.error instanceof ApiRequestError ? generate.error.message : "Something went wrong."}
         </p>
       )}
@@ -88,7 +88,7 @@ export function CoverLetterSection({ jobId }: { jobId: string }) {
             className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/40"
           />
           <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {letter.userEdited ? "Edited by you" : "AI-generated"} · {new Date(letter.generatedAt).toLocaleDateString()}
             </p>
             <button

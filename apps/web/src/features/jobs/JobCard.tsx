@@ -34,7 +34,7 @@ export function JobCard({ job }: { job: Job }) {
             {job.title}
           </Link>
           <div className="flex items-center gap-2 mt-0.5">
-            <p className="text-sm text-slate-500 truncate">{job.company}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 truncate">{job.company}</p>
             <MatchBadge jobId={job.id} />
           </div>
         </div>
@@ -43,7 +43,7 @@ export function JobCard({ job }: { job: Job }) {
             type="button"
             onClick={() => (isSaved ? unsaveJob.mutate(job.id) : saveJob.mutate(job.id))}
             title={isSaved ? "Unsave" : "Save"}
-            className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500"
+            className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500 dark:text-slate-400"
           >
             {isSaved ? <BookmarkCheck size={16} className="text-primary" /> : <Bookmark size={16} />}
           </button>
@@ -51,14 +51,14 @@ export function JobCard({ job }: { job: Job }) {
             type="button"
             onClick={() => hideJob.mutate(job.id)}
             title="Not interested"
-            className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500"
+            className="p-1.5 rounded-lg hover:bg-surface-muted text-slate-500 dark:text-slate-400"
           >
             <EyeOff size={16} />
           </button>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
         {job.location && (
           <span className="inline-flex items-center gap-1">
             <MapPin size={12} /> {job.location}

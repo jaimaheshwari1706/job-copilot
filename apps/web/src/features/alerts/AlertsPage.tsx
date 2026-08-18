@@ -42,7 +42,7 @@ export function AlertsPage() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Job Alerts</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Checked automatically in the background — no need to keep this page open.
         </p>
       </div>
@@ -85,17 +85,17 @@ export function AlertsPage() {
       </form>
 
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading...</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Loading...</p>
       ) : alerts && alerts.length > 0 ? (
         <div className="space-y-2">
           {alerts.map((alert) => (
             <div key={alert.id} className="rounded-xl border border-border bg-surface p-4 flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <Bell size={14} className="text-slate-400 shrink-0" />
+                  <Bell size={14} className="text-slate-500 dark:text-slate-400 shrink-0" />
                   <span className="font-medium text-sm truncate">{alert.name}</span>
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   {alert.frequency} ·{" "}
                   {[
                     alert.criteria.keywords,
@@ -108,7 +108,7 @@ export function AlertsPage() {
                 </p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <label className="flex items-center gap-1.5 text-xs text-slate-500">
+                <label className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                   <input
                     type="checkbox"
                     checked={alert.isActive}
@@ -119,7 +119,7 @@ export function AlertsPage() {
                 <button
                   type="button"
                   onClick={() => deleteAlert.mutate(alert.id)}
-                  className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-600"
+                  className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:text-red-400"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -128,7 +128,7 @@ export function AlertsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-500">No alerts yet.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">No alerts yet.</p>
       )}
     </div>
   );

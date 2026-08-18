@@ -23,7 +23,7 @@ export function RegisterPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Create your account</h1>
-        <p className="text-sm text-slate-500 mt-1">Start finding better-matched roles.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Start finding better-matched roles.</p>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4">
@@ -44,7 +44,7 @@ export function RegisterPage() {
         />
 
         {registerUser.isError && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-600 dark:text-red-400">
             {registerUser.error instanceof ApiRequestError
               ? registerUser.error.message
               : "Something went wrong."}
@@ -60,7 +60,7 @@ export function RegisterPage() {
         </button>
       </form>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         Already have an account?{" "}
         <Link to="/login" className="text-primary hover:underline">
           Log in

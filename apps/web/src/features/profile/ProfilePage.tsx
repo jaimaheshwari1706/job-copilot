@@ -44,14 +44,14 @@ export function ProfilePage() {
   });
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Loading profile...</p>;
+    return <p className="text-sm text-slate-500 dark:text-slate-400">Loading profile...</p>;
   }
 
   return (
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-lg font-semibold">Profile</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Employment history, education, projects, and certifications will populate here once
           resume upload ships (Phase 4) — you'll be able to edit everything AI extracts.
         </p>
@@ -111,7 +111,7 @@ export function ProfilePage() {
         </div>
 
         {updateProfile.isError && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-600 dark:text-red-400">
             {updateProfile.error instanceof ApiRequestError
               ? updateProfile.error.message
               : "Something went wrong."}
@@ -141,13 +141,13 @@ export function ProfilePage() {
               >
                 {skill.name}
                 {!skill.confirmed && (
-                  <span className="text-[10px] text-slate-400">(unconfirmed)</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">(unconfirmed)</span>
                 )}
               </span>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             No skills yet — add some during onboarding, or once resume upload ships.
           </p>
         )}

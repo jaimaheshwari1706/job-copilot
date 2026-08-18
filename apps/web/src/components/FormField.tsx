@@ -26,7 +26,7 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(function F
         {...inputProps}
       />
       {error && (
-        <p id={`${fieldId}-error`} className="text-xs text-red-600">
+        <p id={`${fieldId}-error`} className="text-xs text-red-600 dark:text-red-400">
           {error}
         </p>
       )}

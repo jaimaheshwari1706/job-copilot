@@ -27,16 +27,13 @@ export function createApp() {
   app.use(
     cors({
       origin: env.CORS_ORIGIN,
-      credentials: true, // required so the refresh-token cookie is sent/accepted
+      credentials: true,
     }),
   );
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
   app.use(pinoHttp({ logger }));
 
-  // Phase 1: only the health module is mounted. auth/profile/resumes/jobs/...
-  // are mounted here starting Phase 2, each as its own routes file under
-  // src/modules/<domain>/.
   app.use("/health", healthRouter);
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);

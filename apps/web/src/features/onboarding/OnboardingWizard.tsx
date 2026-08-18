@@ -73,7 +73,7 @@ export function OnboardingWizard() {
     <div className="min-h-screen flex items-center justify-center bg-surface-muted px-4 py-10">
       <div className="w-full max-w-lg bg-surface border border-border rounded-xl p-8 shadow-sm">
         <div className="mb-6">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-2">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-2">
             <span>
               Step {stepIndex + 1} of {STEPS.length}
             </span>
@@ -91,7 +91,7 @@ export function OnboardingWizard() {
           type="button"
           disabled
           title="Resume upload is available on the Resume page — auto-filling this form from it ships with AI extraction (Phase 8)"
-          className="w-full mb-6 flex items-center justify-center gap-2 rounded-lg border border-dashed border-border py-2.5 text-sm text-slate-400 cursor-not-allowed"
+          className="w-full mb-6 flex items-center justify-center gap-2 rounded-lg border border-dashed border-border py-2.5 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed"
         >
           <UploadCloud size={16} />
           Skip by uploading your resume (coming soon)
@@ -199,7 +199,7 @@ export function OnboardingWizard() {
           )}
 
           {completeOnboarding.isError && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-red-600 dark:text-red-400">
               {completeOnboarding.error instanceof ApiRequestError
                 ? completeOnboarding.error.message
                 : "Something went wrong."}
@@ -211,7 +211,7 @@ export function OnboardingWizard() {
               type="button"
               onClick={goBack}
               disabled={stepIndex === 0}
-              className="text-sm text-slate-500 disabled:opacity-0 hover:text-primary"
+              className="text-sm text-slate-500 dark:text-slate-400 disabled:opacity-0 hover:text-primary"
             >
               Back
             </button>
