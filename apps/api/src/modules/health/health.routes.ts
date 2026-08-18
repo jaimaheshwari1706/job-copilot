@@ -26,7 +26,15 @@ healthRouter.get(
     let redisOk = false;
     try {
       const redis = getRedisConnection(env.REDIS_URL);
-      const pong = await redis.ping();
+      // ioredis (maxRetriesPerRequest: null, required by BullMQ) retries a
+      // dead connection forever instead of rejecting — without a bounded
+      // race here, a genuinely-unreachable Redis makes this "readiness"
+      // probe hang instead of quickly reporting "degraded", which defeats
+      // the entire point of a readiness check.
+      const timeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Redis ping timed out")), 3000),
+      );
+      const pong = await Promise.race([redis.ping(), timeout]);
       redisOk = pong === "PONG";
     } catch {
       redisOk = false;
